@@ -1,74 +1,82 @@
 package br.com.properity.batch.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CandidatoBean {
+	private int contador = -1;
 	private Long id;
 	private Long lead_id;
 	private Integer form_id;
 	private Integer field_number;
 
-	private String tipoCampo;
-	private String valorCampo;
+	private List<String> tipoCampo = new ArrayList<>();
+	private List<String> valorCampo = new ArrayList<>();
 
-	public void setTipoCampo(String tipoCampo) {
-		this.tipoCampo = tipoCampo;
-	}
-
-	public String getValorCampo() {
-		return valorCampo;
+	public String getValorCampo(int i) {
+		return valorCampo.get(i);
 	}
 
 	public void setValorCampo(String valorCampo) {
-		this.valorCampo = valorCampo;
+		this.valorCampo.add(valorCampo);
 	}
 
-	public String getTipoCampo() {
-		return valorCampo;
+	public List<String> getTipoCampo() {
+		return this.tipoCampo;
+	}
+
+	public int getContador() {
+		return contador;
+	}
+
+	public void setContador(int contador) {
+		this.contador = contador;
 	}
 
 	public void setTipoCampo() {
+		this.contador++;
 		switch (this.field_number) {
 		case 15:
-			this.valorCampo = "vaga";
+			this.tipoCampo.add("vaga");
 			break;
 		case 1:
-			this.valorCampo = "Nome Completo";
+			this.tipoCampo.add("Nome Completo");
 			break;
 		case 8:
-			this.valorCampo = "Data nascimento";
+			this.tipoCampo.add("Data nascimento");
 			break;
 		case 3:
-			this.valorCampo = "E-mail";
+			this.tipoCampo.add("E-mail");
 			break;
 		case 10:
-			this.valorCampo = "Telefone";
+			this.tipoCampo.add("Telefone");
 			break;
 		case 11:
-			this.valorCampo = "Cidade";
+			this.tipoCampo.add("Cidade");
 			break;
 		case 27:
-			this.valorCampo = "Grau de instruÃ§Ãµes";
+			this.tipoCampo.add("Grau de instruções");
 			break;
 		case 28:
-			this.valorCampo = "Curso";
+			this.tipoCampo.add("Curso");
 			break;
 		case 29:
-			this.valorCampo = "InstituiÃ§Ã£o";
+			this.tipoCampo.add("Instituição");
 			break;
 		case 31:
-			this.valorCampo = "Tipo de curso";
+			this.tipoCampo.add("Tipo de curso");
 			break;
 		case 32:
-			this.valorCampo = "SituaÃ§Ã£o atual";
+			this.tipoCampo.add("Situação atual");
 			break;
 		case 33:
-			this.valorCampo = "MÃªs/ano de conclusÃ£o";
+			this.tipoCampo.add("Mês/ano de conclusão");
 			break;
 		case 13:
-			this.valorCampo = "CurrÃ­culo";
+			this.tipoCampo.add("Currículo");
 			break;
 		default:
-			this.valorCampo = "Valor";
-			;
+			this.tipoCampo.add("Valor");
 		}
 	}
 
