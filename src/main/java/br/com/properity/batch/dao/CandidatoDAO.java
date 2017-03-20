@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import br.com.properity.batch.bean.CandidatoBean;
+import br.com.properity.batch.bean.WordpressBean;
 import br.com.properity.batch.connection.ConnectionFactory;
 
 public class CandidatoDAO {
 
-	private List<CandidatoBean> listaCandidatos = new ArrayList<>();
+	private final String sqlQuery = "select T1.*, T2.date_created from wp_rg_lead_detail AS T1, wp_rg_lead AS T2  where T1.form_id = 4 and DATE(T2.date_created) > ";
+	
+	private List<WordpressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
 	private Connection conexao;
 	private Statement stmt = null;
@@ -44,8 +46,8 @@ public class CandidatoDAO {
 		return date;
 	}
 
-	public CandidatoBean getBean() {
-		CandidatoBean candidato = new CandidatoBean();
+	public WordpressBean getBean() {
+		WordpressBean candidato = new WordpressBean();
 		this.stmt = null;
 		this.rs = null;
 
@@ -63,7 +65,7 @@ public class CandidatoDAO {
 
 			while (rs.next()) {
 
-				candidato.setId(rs.getLong(1));
+				candidato.setIdWordpress(rs.getLong(1));
 				candidato.setLead_id(rs.getLong(2));
 				candidato.setForm_id(rs.getInt(3));
 				candidato.setField_number(rs.getInt(4));
@@ -113,14 +115,19 @@ public class CandidatoDAO {
 		return candidato;
 	}
 
-	public List<CandidatoBean> listar() {
+	//Listar:
+	public List<WordpressBean> listar() {
 		this.stmt = null;
 		this.rs = null;
+		
+		// Para executar o batch a partir do mais recente cadastro:
+		String dataMaisRecente = this.pegarDataUltimoCadastroDoArquivo();
+		String buscarCadastrosMaisRecentes = this.sqlQuery + dataMaisRecente;
 
 		try {
 			conexao = ConnectionFactory.pegaConexao();
 			this.stmt = conexao.createStatement();
-			this.stmt.execute("select * from wp_rg_lead_detail where form_id = 4");
+			this.stmt.execute(buscarCadastrosMaisRecentes);
 			this.rs = this.stmt.getResultSet();
 
 			/*
@@ -130,14 +137,13 @@ public class CandidatoDAO {
 			 */
 
 			// Instancio o candidato bean
-			CandidatoBean candidato = new CandidatoBean();
+			WordpressBean candidato = new WordpressBean();
 
 			while (this.rs.next()) {
 				// Na primeira linha da busca, o field_number vale 1,
 				// valor que corresponde ao tipoCampo nome completo do candidato
 				if (this.rs.getInt(4) == 1) {
-					candidato = new CandidatoBean();
-					candidato.setId(this.rs.getLong(1));
+					candidato.setIdWordpress(this.rs.getLong(1));
 					candidato.setLead_id(this.rs.getLong(2));
 					candidato.setForm_id(this.rs.getInt(3));
 					candidato.setField_number(this.rs.getInt(4));
@@ -206,7 +212,7 @@ public class CandidatoDAO {
 			System.out.println(e);
 		}
 		
-		System.out.println(data);
+		// System.out.println(data);
 		
 		return data;
 	}

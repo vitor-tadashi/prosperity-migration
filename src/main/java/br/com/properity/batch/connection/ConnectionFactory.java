@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import br.com.properity.batch.bean.CandidatoBean;
+import br.com.properity.batch.bean.WordpressBean;
 
 // Notice, do not import com.mysql.jdbc.*
 // or you will have problems!
