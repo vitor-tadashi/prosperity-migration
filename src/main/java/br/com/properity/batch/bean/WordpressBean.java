@@ -36,7 +36,7 @@ public class WordpressBean {
 			break;
 		// id 1:
 		case 1:
-			this.tipoCampo.add("Nome Completo");
+			this.tipoCampo.add("Nome");
 			break;
 		// id 2:
 		case 8:
@@ -145,7 +145,11 @@ public class WordpressBean {
 		case 40:
 			this.tipoCampo.add("Financeiro");
 			break;
-		// id 28 em diante
+		// id 28:
+		case 9:
+			this.tipoCampo.add("Cpf");
+			break;
+		// id 29 em diante
 		default:
 			this.tipoCampo.add("Valor");
 		}
