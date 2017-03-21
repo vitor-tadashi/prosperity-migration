@@ -29,127 +29,100 @@ public class WordpressBean {
 	}
 
 	public void setTipoCampo() {
+		
+		// Regra para as strings: Primeira letra da primeira palavra sempre maiúscula e sem caracteres especiais.
+		// As demais letras ficam minúsculas.
 		switch (this.field_number) {
-		// id 0:
 		case 15:
 			this.tipoCampo.add("Vaga");
 			break;
-		// id 1:
 		case 1:
 			this.tipoCampo.add("Nome");
 			break;
-		// id 2:
 		case 8:
 			this.tipoCampo.add("Data nascimento");
 			break;
-		// id 3:
 		case 3:
-			this.tipoCampo.add("E-mail");
+			this.tipoCampo.add("Email");
 			break;
-		// id 4:
 		case 10:
 			this.tipoCampo.add("Telefone");
 			break;
-		// id 5:
 		case 11:
 			this.tipoCampo.add("Cidade");
 			break;
-		// id 6:			
 		case 27:
-			this.tipoCampo.add("Grau de instrução");
+			this.tipoCampo.add("Grau de instrucao");
 			break;
 		case 28:
 			this.tipoCampo.add("Curso");
 			break;
-		// id 7:
 		case 29:
-			this.tipoCampo.add("Instituição");
+			this.tipoCampo.add("Instituicao");
 			break;
-		// id 8:
 		case 31:
 			this.tipoCampo.add("Tipo de curso");
 			break;
-		// id 9:
 		case 32:
-			this.tipoCampo.add("Situação atual");
+			this.tipoCampo.add("Situacao atual");
 			break;
-		// id 10:
 		case 33:
-			this.tipoCampo.add("Mês/ano de conclusão");
+			this.tipoCampo.add("Mes ano conclusao");
 			break;
-		// id 11:
 		case 13:
-			this.tipoCampo.add("Currículo");
+			this.tipoCampo.add("Curriculo");
 			break;
-		// id 12:
 		case 14:
-			this.tipoCampo.add("Como ficou sabendo da Verity");
+			this.tipoCampo.add("Como ficou sabendo");
 			break;
-		// id 13:
 		case 16:
-			this.tipoCampo.add("Como ficou sabendo da Verity: Outros");
+			this.tipoCampo.add("Outros");
 			break;
-		// id 14:
 		case 18:
-			this.tipoCampo.add("Remuneração atual");
+			this.tipoCampo.add("Remuneracao atual");
 			break;
-		// id 15:
 		case 23:
-			this.tipoCampo.add("Benefícios atuais");
+			this.tipoCampo.add("Beneficios atuais");
 			break;
-		// id 16:
 		case 20:
-			this.tipoCampo.add("Pretensão salarial");
+			this.tipoCampo.add("Pretensao salarial");
 			break;
-		// id 17:
 		case 21:
-			this.tipoCampo.add("Referências profissionais");
+			this.tipoCampo.add("Referencias profissionais");
 			break;
-		// id 18:
 		case 19:
 			this.tipoCampo.add("Parecer RH");
 			break;
-		// id 19:
 		case 24:
 			this.tipoCampo.add("Parecer final RH");
 			break;
-		// id 20:
 		case 25:
-			this.tipoCampo.add("Responsável técnico");
+			this.tipoCampo.add("Responsavel tecnico");
 			break;
-		// id 21:
 		case 38:
 			this.tipoCampo.add("Profundidade");
 			break;
-		// id 22:
 		case 36:
 			this.tipoCampo.add("Planejamento");
 			break;
-		// id 23:
 		case 37:
-			this.tipoCampo.add("Execução e entrega");
+			this.tipoCampo.add("Execucao e entrega");
 			break;
-		// id 24:
 		case 39:
 			this.tipoCampo.add("Profundidade");
 			break;
-		// id 25:
 		case 42:
 			this.tipoCampo.add("Pessoas");
 			break;
-		// id 26:
 		case 41:
 			this.tipoCampo.add("Comercial");
 			break;
-		// id 27:
 		case 40:
 			this.tipoCampo.add("Financeiro");
 			break;
-		// id 28:
 		case 9:
 			this.tipoCampo.add("Cpf");
 			break;
-		// id 29 em diante
 		default:
 			this.tipoCampo.add("Valor");
 		}

@@ -9,8 +9,8 @@ public class TesteConn {
 	public static void main(String[] args) {
 		CandidatoBusiness b = new CandidatoBusiness();
 		
-		//b.forçaDataAntiga();
-		//b.mostrarLista();
+		b.forçaDataAntiga();
+		b.mostrarLista();
 		b.GravaDataUltimoCadastro();
 	}
 }

@@ -20,16 +20,16 @@ public class CandidatoBusiness {
 
 		for (WordpressBean candidatoBean : listaCandidatos) {
 			System.out.println(
-					"Id do cara: " + candidatoBean.getLead_id() + " nome do cara: " + candidatoBean.getValorCampo(1));
+					"Id do cara: " + candidatoBean.getLead_id() + " nome do cara: " + candidatoBean.getValorCampo(0));
 			System.out.println(
 					"\n------------------------------------------------------------------------------------------");
 		}
 	}
 
-	/*
-	 * public String ultimoCadastro() { return
-	 * candidatoDao.DataUltimoCadastro(); }
-	 */
+	public String ultimoCadastro() {
+		return candidatoDao.DataUltimoCadastro();
+	}
+
 	public void GravaDataUltimoCadastro() {
 		String dataNova;
 
@@ -66,7 +66,7 @@ public class CandidatoBusiness {
 			pwOb.close();
 			fwOb.close();
 
-			out.print("'" + "2000-01-01" + "'");
+			out.print("'" + "2017-01-01" + "'");
 			out.close();
 		} catch (IOException e) {
 			System.out.println(
