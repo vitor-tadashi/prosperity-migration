@@ -16,11 +16,11 @@ import bean.SituacaoAtualBean;
 import bean.TipoCursoBean;
 import bean.VagaBean;
 import bean.VagaCandidatoBean;
-import br.com.properity.batch.bean.WordpressBean;
+import br.com.properity.batch.bean.CandidatoWordPressBean;
 
 public class ConverterWordpressBeanToCandidatoBean {
 
-	public CandidatoBean transformaWordpressEmCandidato(WordpressBean w) {
+	public CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
 		VagaBean vaga = new VagaBean();
 		ContatoBean contato = new ContatoBean();
@@ -90,7 +90,6 @@ public class ConverterWordpressBeanToCandidatoBean {
 		return candidato;
 	}
 
-
 	private Date transformaStringEmDataPadrao(String dataNaoTratada) {
 		
 		String dataTratada = "01";
@@ -135,11 +134,11 @@ public class ConverterWordpressBeanToCandidatoBean {
 	}
 
 
-	public List<CandidatoBean> transformaLista(List<WordpressBean> listaWordpress) {
+	public List<CandidatoBean> transformaLista(List<CandidatoWordPressBean> listaWordpress) {
 
 		List<CandidatoBean> candidatos = new ArrayList<>();
 
-		for (WordpressBean w : listaWordpress) {
+		for (CandidatoWordPressBean w : listaWordpress) {
 			candidatos.add(this.transformaWordpressEmCandidato(w));
 		}
 		return candidatos;

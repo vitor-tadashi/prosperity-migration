@@ -1,16 +1,13 @@
 package br.com.prosperity.batch;
 
 import org.springframework.batch.item.ItemProcessor;
+import br.com.properity.batch.bean.*;
 
-import com.mkyong.model.Report;
-
-public class CustomItemProcessor implements ItemProcessor<Report, Report> {
+public class CustomItemProcessor implements ItemProcessor<WordpressBean, WordpressBean> {
 
 	@Override
-	public Report process(Report item) throws Exception {
-		
-		System.out.println("Processing..." + item);
-		return item;
+	public WordpressBean process(WordpressBean w) throws Exception {
+		return w;
 	}
 
 }

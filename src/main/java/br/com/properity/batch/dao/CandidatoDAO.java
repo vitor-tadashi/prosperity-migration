@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import br.com.properity.batch.bean.CandidatoWordPressBean;
 import br.com.properity.batch.bean.WordpressBean;
 import br.com.properity.batch.connection.ConnectionFactory;
 
@@ -17,7 +18,7 @@ public class CandidatoDAO {
 
 	private final String sqlQuery = "select T1.*, T2.date_created from wp_rg_lead_detail AS T1, wp_rg_lead AS T2  where T1.form_id = 4 and DATE(T2.date_created) > ";
 	
-	private List<WordpressBean> listaCandidatos = new ArrayList<>();
+	private List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
 	private Connection conexao;
 	private Statement stmt = null;
@@ -46,8 +47,8 @@ public class CandidatoDAO {
 		return date;
 	}
 
-	public WordpressBean getBean() {
-		WordpressBean candidato = new WordpressBean();
+	public CandidatoWordPressBean getBean() {
+		CandidatoWordPressBean candidato = new CandidatoWordPressBean();
 		this.stmt = null;
 		this.rs = null;
 
@@ -116,7 +117,7 @@ public class CandidatoDAO {
 	}
 
 	//Listar:
-	public List<WordpressBean> listar() {
+	public List<CandidatoWordPressBean> listar() {
 		this.stmt = null;
 		this.rs = null;
 		
@@ -137,7 +138,7 @@ public class CandidatoDAO {
 			 */
 
 			// Instancio o candidato bean
-			WordpressBean candidato = new WordpressBean();
+			CandidatoWordPressBean candidato = new CandidatoWordPressBean();
 
 			while (this.rs.next()) {
 				// Na primeira linha da busca, o field_number vale 1,
@@ -206,14 +207,14 @@ public class CandidatoDAO {
 		String data = "n foi";
 		
 		try {
-			data = new Scanner(new File(textFile)).useDelimiter("\\Z").next();
+			Scanner scanner = new Scanner(new File(textFile));
+			data = scanner.useDelimiter("\\Z").next();
+			scanner.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Erro ao tentar ler do seguinte arquivo: " + textFile);
 			System.out.println(e);
 		}
-		
 		// System.out.println(data);
-		
 		return data;
 	}
 }

@@ -6,11 +6,10 @@ import br.com.properity.batch.business.CandidatoBusiness;
 // or you will have problems!
 
 public class TesteConn {
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		CandidatoBusiness b = new CandidatoBusiness();
 		
 		b.forçaDataAntiga();
-		b.mostrarLista();
 		b.GravaDataUltimoCadastro();
-	}
+	}*/
 }

@@ -4,9 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResultadoSQL {
-	public WordpressBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public CandidatoWordPressBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		WordpressBean candidato = new WordpressBean();
+		CandidatoWordPressBean candidato = new CandidatoWordPressBean();
 		candidato.setIdWordpress(rs.getLong(0));
 		candidato.setLead_id(rs.getLong(1));
 		candidato.setForm_id(rs.getInt(2));

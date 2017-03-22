@@ -7,23 +7,26 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.properity.batch.bean.WordpressBean;
+import bean.CandidatoBean;
+import br.com.properity.batch.bean.CandidatoWordPressBean;
+import br.com.properity.batch.converter.ConverterWordpressBeanToCandidatoBean;
 import br.com.properity.batch.dao.CandidatoDAO;
 
 public class CandidatoBusiness {
 	private CandidatoDAO candidatoDao = new CandidatoDAO();
-	private List<WordpressBean> listaCandidatos = new ArrayList<>();
+	private List<CandidatoWordPressBean> listaCandidatosWordpress = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
 
-	public void mostrarLista() {
-		listaCandidatos = candidatoDao.listar();
-
-		for (WordpressBean candidatoBean : listaCandidatos) {
-			System.out.println(
-					"Id do cara: " + candidatoBean.getLead_id() + " nome do cara: " + candidatoBean.getValorCampo(0));
-			System.out.println(
-					"\n------------------------------------------------------------------------------------------");
-		}
+	public List<CandidatoBean> retornaListaBean() {
+		
+		List<CandidatoBean> candidatos = new ArrayList<>();
+		listaCandidatosWordpress = candidatoDao.listar();
+		
+		ConverterWordpressBeanToCandidatoBean conversor = new ConverterWordpressBeanToCandidatoBean();
+		candidatos = conversor.transformaLista(listaCandidatosWordpress);
+		
+		return candidatos;
+		
 	}
 
 	public String ultimoCadastro() {

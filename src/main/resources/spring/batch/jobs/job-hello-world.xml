@@ -9,70 +9,69 @@
 	<import resource="../config/context.xml" />
 	<import resource="../config/database.xml" />
 
-	<bean id="itemProcessor" class="br.com.prosperity.batch.bean.CandidatoBean" />
+	<bean id="itemProcessor" class="br.com.prosperity.batch.CustomItemProcessor" />
+	<bean id="itemWriter" class="br.com.prosperity.batch.CustomItemWriter" />
+	<bean id="itemReader" class="br.com.prosperity.batch.CustomItemReader" />
 
-	<!-- <batch:job id="helloWorldJob"> <batch:step id="step1"> <batch:tasklet> 
-		<batch:chunk reader="cvsFileItemReader" writer="xmlItemWriter" processor="itemProcessor" 
-		commit-interval="10"> </batch:chunk> </batch:tasklet> </batch:step> </batch:job> -->
 
-	<batch:job id="migration" restartable="true">
-		<batch:step id="lerDadosBancoWordpress" next="gameLoad">
+	<batch:job id="helloWorldJob">
+		<batch:step id="step1" parent="stepParent">
 			<batch:tasklet>
-				<batch:chunk reader="playerFileItemReader" writer="playerWriter"
-					commit-interval="10" />
-			</batch:tasklet>
-		</batch:step>
-		<batch:step id="preencherBeans" next="playerSummarization">
-			<batch:tasklet allow-start-if-complete="true">
-				<batch:chunk reader="gameFileItemReader" writer="gameWriter"
-					commit-interval="10" />
-			</batch:tasklet>
-		</batch:step>
-		<batch:step id="playerSummarization">
-			<batch:tasklet start-limit="3">
-				<batch:chunk reader="playerSummarizationSource" writer="summaryWriter"
-					commit-interval="10" />
+				<batch:chunk reader="itemReader" writer="itemWriter"
+					processor="itemProcessor">
+				</batch:chunk>
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
 
-	<bean id="cvsFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
 
-		<property name="resource" value="classpath:cvs/input/report.csv" />
 
-		<property name="lineMapper">
-			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
-				<property name="lineTokenizer">
-					<bean
-						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-						<property name="names" value="id,sales,qty,staffName,date" />
-					</bean>
-				</property>
-				<property name="fieldSetMapper">
-					<bean class="com.mkyong.ReportFieldSetMapper" />
+	<!-- run every 10 seconds -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<bean id="cronTrigger"
+				class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+				<property name="jobDetail" ref="jobDetail" />
+				<property name="cronExpression" value="0 0/1 * 1/1 * ? *" />
+			</bean>
+		</property>
+	</bean>
 
-					<!-- if no data type conversion, use BeanWrapperFieldSetMapper to map 
-						by name <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper"> 
-						<property name="prototypeBeanName" value="report" /> </bean> -->
-				</property>
+
+	<bean id="jobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="br.com.prosperity.batch.JobLauncherDetails" />
+		<property name="group" value="quartz-batch" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="jobName" value="helloWorldJob" />
+				<entry key="jobLocator" value-ref="jobRegistry" />
+				<entry key="jobLauncher" value-ref="jobLauncher" />
+			</map>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+	</bean>
+
+	<bean id="jobRegistry"
+		class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+
+	<bean id="stepParent"
+		class="org.springframework.batch.core.step.factory.FaultTolerantStepFactoryBean"
+		abstract="true">
+
+		<property name="backOffPolicy">
+			<bean class="org.springframework.retry.backoff.FixedBackOffPolicy">
+				<property name="backOffPeriod" value="10000" />
 			</bean>
 		</property>
 
 	</bean>
-
-	<bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
-		<property name="resource" value="file:xml/outputs/report.xml" />
-		<property name="marshaller" ref="reportMarshaller" />
-		<property name="rootTagName" value="report" />
-	</bean>
-
-	<bean id="reportMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="classesToBeBound">
-			<list>
-				<value>com.mkyong.model.Report</value>
-			</list>
-		</property>
-	</bean>
-
-
 </beans>
