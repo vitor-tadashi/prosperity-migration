@@ -9,6 +9,7 @@ import java.util.List;
 
 import bean.CanalInformacaoBean;
 import bean.CandidatoBean;
+import bean.CargoBean;
 import bean.ContatoBean;
 import bean.EnderecoBean;
 import bean.FormacaoBean;
@@ -30,6 +31,9 @@ public class ConverterWordpressBeanToCandidatoBean {
 		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
 		CanalInformacaoBean canalInformacao = new CanalInformacaoBean();
 		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
+		CargoBean cargoBean = new CargoBean();
+		
+		cargoBean.setNome("x");
 		
 		for (int i = 0; i < w.getTipoCampo().size(); i++) {
 			
@@ -52,6 +56,7 @@ public class ConverterWordpressBeanToCandidatoBean {
 				candidato.setDataNascimento(dataConvertida);
 			} else if (w.getTipoCampo().get(i).equals("Vaga")) {
 				vaga.setNomeVaga(w.getValorCampo(i));
+				//vaga.setAumentaQuadro('c');
 			} else if (w.getTipoCampo().get(i).equals("Email")) {
 				candidato.setEmail(w.getValorCampo(i));
 			} else if (w.getTipoCampo().get(i).equals("Telefone")) {
@@ -77,6 +82,10 @@ public class ConverterWordpressBeanToCandidatoBean {
 			} 
 		}
 		
+		vaga.setAumentaQuadro('s');
+		vaga.setCargoBean(cargoBean);
+		vaga.setIdTipoVaga('z');
+		candidato.setValorMin(10);
 		vagaCandidato.setCanalInformacao(canalInformacao);
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);

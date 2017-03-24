@@ -14,7 +14,9 @@ public class CustomItemReader implements ItemReader<WordpressBean> {
 	public WordpressBean read()
 			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 		
-		Thread.sleep(15000);
+		//Thread.sleep(15000);
+		
+		System.out.println("LER LEGAL");
 		
 		WordpressBean wordpressBean = new WordpressBean();
 		CandidatoBusiness b = new CandidatoBusiness();

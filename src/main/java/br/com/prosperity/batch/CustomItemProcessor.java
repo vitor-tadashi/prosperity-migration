@@ -7,6 +7,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 	@Override
 	public WordpressBean process(WordpressBean w) throws Exception {
+		System.out.println("PROCESSAR LEGAL");
 		return w;
 	}
 

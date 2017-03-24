@@ -1,8 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/batch
 		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
-		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	">
 
@@ -13,22 +14,20 @@
 	<bean id="itemWriter" class="br.com.prosperity.batch.CustomItemWriter" />
 	<bean id="itemReader" class="br.com.prosperity.batch.CustomItemReader" />
 
-
 	<batch:job id="helloWorldJob">
-		<batch:step id="step1" parent="stepParent">
-			<batch:tasklet>
-				<batch:chunk reader="itemReader" writer="itemWriter"
-					processor="itemProcessor">
-				</batch:chunk>
-			</batch:tasklet>
-		</batch:step>
+	  <batch:step id="step1">
+		<batch:tasklet>
+			<batch:chunk reader="itemReader" writer="itemWriter"
+                              processor="itemProcessor" commit-interval="10">
+			</batch:chunk>
+		</batch:tasklet>
+	  </batch:step>
 	</batch:job>
 
 	<bean id="jobLauncher"
 		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
 	</bean>
-
 
 	<!-- run every 10 seconds -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -40,7 +39,6 @@
 			</bean>
 		</property>
 	</bean>
-
 
 	<bean id="jobDetail"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">

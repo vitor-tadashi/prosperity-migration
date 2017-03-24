@@ -8,8 +8,8 @@ public class App {
 
 		String springConfig = "spring/batch/jobs/job-hello-world.xml";
 
-		ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);
-
+		ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);	
+		
 		System.out.println("Done");
 	}
 }

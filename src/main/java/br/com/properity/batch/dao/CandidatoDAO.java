@@ -17,6 +17,7 @@ import br.com.properity.batch.connection.ConnectionFactory;
 public class CandidatoDAO {
 
 	private final String sqlQuery = "select T1.*, T2.date_created from wp_rg_lead_detail AS T1, wp_rg_lead AS T2  where T1.form_id = 4 and DATE(T2.date_created) > ";
+	private final String teste = "select * from wp_rg_lead_detail WHERE lead_id between 3337 and 3360 ";
 	
 	private List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
@@ -128,7 +129,8 @@ public class CandidatoDAO {
 		try {
 			conexao = ConnectionFactory.pegaConexao();
 			this.stmt = conexao.createStatement();
-			this.stmt.execute(buscarCadastrosMaisRecentes);
+			//this.stmt.execute(buscarCadastrosMaisRecentes);
+			this.stmt.execute(teste);
 			this.rs = this.stmt.getResultSet();
 
 			/*

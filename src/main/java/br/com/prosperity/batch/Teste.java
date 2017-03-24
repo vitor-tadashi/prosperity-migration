@@ -1,8 +1,7 @@
 package br.com.prosperity.batch;
 
-import java.util.List;
-
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -12,19 +11,23 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.springframework.batch.item.ItemWriter;
+import org.glassfish.jersey.client.ClientResponse;
 import org.w3c.dom.Document;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 import br.com.properity.batch.bean.WordpressBean;
+import br.com.properity.batch.business.CandidatoBusiness;
 
-public class CustomItemWriter implements ItemWriter<WordpressBean>{
-	
-	
-	public void writeTo(WordpressBean w) throws Exception {
+public class Teste {
 
+	public static void main(String[] args) throws Exception {
+		WordpressBean wordpressBean = new WordpressBean();
+		CandidatoBusiness b = new CandidatoBusiness();
+		
+		wordpressBean.setCandidatos(b.retornaListaBean());
+		
 		System.out.println("ESCREVER LEGAL");
 
 		try {
@@ -36,7 +39,7 @@ public class CustomItemWriter implements ItemWriter<WordpressBean>{
 	        Document document = db.newDocument();
 	        
 			// serialize the entity myBean to the entity output stream
-			jaxbContext.createMarshaller().marshal(w, document);
+			jaxbContext.createMarshaller().marshal(wordpressBean, document);
 			
 			TransformerFactory tf = TransformerFactory.newInstance();
 	        Transformer t = tf.newTransformer();
@@ -44,23 +47,20 @@ public class CustomItemWriter implements ItemWriter<WordpressBean>{
 	        StreamResult result = new StreamResult(System.out);
 	        t.transform(source, result);
 	        
-	    	final String url = "localhost:8080/servico/candidato-servico";
+	    	final String url = "http://http://localhost:2222/prosperity.batch/servico/rest/can";
 
 			// Get data from the server
 			Client client = Client.create();
 			WebResource resource = client.resource(url);
+			
+			ClientResponse response = resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, wordpressBean);
 
-			resource.post(result);
+			resource.post(response);
 			
 		} catch (JAXBException jaxbException) {
 			throw new ProcessingException("Error serializing a MyBean to the output stream", jaxbException);
 		}
+
 	}
 
-	@Override
-	public void write(List<? extends WordpressBean> arg0) throws Exception {
-
-		writeTo(arg0.get(0));
-		
-	}
 }
