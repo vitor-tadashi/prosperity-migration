@@ -17,7 +17,7 @@ import br.com.properity.batch.connection.ConnectionFactory;
 public class CandidatoDAO {
 
 	private final String sqlQuery = "select T1.*, T2.date_created from wp_rg_lead_detail AS T1, wp_rg_lead AS T2  where T1.form_id = 4 and DATE(T2.date_created) > ";
-	private final String teste = "select * from wp_rg_lead_detail WHERE lead_id between 3337 and 3360 ";
+	private final String teste = "select * from wp_rg_lead_detail WHERE lead_id between 3337 and 3360 and form_id = 4 ORDER BY lead_id asc, field_number asc";
 	
 	private List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
@@ -48,75 +48,6 @@ public class CandidatoDAO {
 		return date;
 	}
 
-	public CandidatoWordPressBean getBean() {
-		CandidatoWordPressBean candidato = new CandidatoWordPressBean();
-		this.stmt = null;
-		this.rs = null;
-
-		try {
-			conexao = ConnectionFactory.pegaConexao();
-			stmt = conexao.createStatement();
-			stmt.execute("select * from wp_rg_lead_detail where form_id = 4 and lead_id = 5591;");
-			rs = stmt.getResultSet();
-
-			/*
-			 * if (stmt.execute(
-			 * "select * from wp_rg_lead_detail where form_id = 4 and lead_id = 5591"
-			 * )) { rs = stmt.getResultSet(); }
-			 */
-
-			while (rs.next()) {
-
-				candidato.setIdWordpress(rs.getLong(1));
-				candidato.setLead_id(rs.getLong(2));
-				candidato.setForm_id(rs.getInt(3));
-				candidato.setField_number(rs.getInt(4));
-
-				// Método que seta o tipo do campo (isto é, "vaga", "nome
-				// completo", "email", etc.) dependendo do número fornecido no arquivo json.candidato:
-				candidato.setTipoCampo();
-
-				candidato.setValorCampo(rs.getString(5));
-
-				/*
-				 * System.out.println(candidato.getField_number() + " : " +
-				 * candidato.getTipoCampo() + " : " +
-				 * candidato.getValorCampo());
-				 */
-			}
-
-		} catch (SQLException ex) {
-			// handle any errors
-			System.out.println("SQLException: " + ex);
-			System.out.println("SQLState: " + ex);
-			System.out.println("VendorError: " + ex);
-		} finally {
-			// it is a good idea to release
-			// resources in a finally{} block
-			// in reverse-order of their creation
-			// if they are no-longer needed
-
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException sqlEx) {
-				} // ignore
-
-				rs = null;
-			}
-
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException sqlEx) {
-				} // ignore
-
-				stmt = null;
-			}
-		}
-		return candidato;
-	}
-
 	//Listar:
 	public List<CandidatoWordPressBean> listar() {
 		this.stmt = null;
@@ -138,39 +69,10 @@ public class CandidatoDAO {
 			 * "select * from wp_rg_lead_detail where form_id = 4 and lead_id = 5591"
 			 * )) { rs = stmt.getResultSet(); }
 			 */
-
-			// Instancio o candidato bean
-			CandidatoWordPressBean candidato = new CandidatoWordPressBean();
-
 			while (this.rs.next()) {
-				// Na primeira linha da busca, o field_number vale 1,
-				// valor que corresponde ao tipoCampo nome completo do candidato
-				if (this.rs.getInt(4) == 1) {
-					candidato.setIdWordpress(this.rs.getLong(1));
-					candidato.setLead_id(this.rs.getLong(2));
-					candidato.setForm_id(this.rs.getInt(3));
-					candidato.setField_number(this.rs.getInt(4));
-					/*
-					 * System.out.println(candidato.getField_number() + " : " +
-					 * candidato.getTipoCampo() + " : " +
-					 * candidato.getValorCampo());
-					 */
-				}
-
-				// Aqui fora finalmente seto os valores que permanecem a ser
-				// alterados:
-				// TIPOCAMPO E VALORCAMPO (texto que está inserido dentro)
-
-				// Método que seta o tipo do campo (isto é, "vaga", "nome
-				// completo", "email", etc.)
-				// dependendo do número fornecido no arquivo json.candidato:
-				candidato.setTipoCampo();
-				candidato.setValorCampo(this.rs.getString(5));
-
-				// Finalmente adiciono o bean na lista de beans:
-
-				listaCandidatos.add(candidato);
-
+				// Instancio o candidato bean
+				CandidatoWordPressBean candidato = new CandidatoWordPressBean();
+				candidato.setForm_id(4);
 			}
 
 		} catch (SQLException ex) {

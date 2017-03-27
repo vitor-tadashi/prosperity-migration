@@ -32,12 +32,13 @@ public class ConverterWordpressBeanToCandidatoBean {
 		CanalInformacaoBean canalInformacao = new CanalInformacaoBean();
 		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
 		CargoBean cargoBean = new CargoBean();
-		
+
 		cargoBean.setNome("x");
-		
-		for (int i = 0; i < w.getTipoCampo().size(); i++) {
-			
-			// Regra para as strings: Primeira letra da primeira palavra sempre maiúscula e sem caracteres especiais.
+
+		for (int i = 0; i < 15; i++) {
+
+			// Regra para as strings: Primeira letra da primeira palavra sempre
+			// maiúscula e sem caracteres especiais.
 			// As demais letras ficam minúsculas.
 			if (w.getTipoCampo().get(i).equals("Cpf")) {
 				candidato.setCpf(w.getValorCampo(i));
@@ -45,18 +46,18 @@ public class ConverterWordpressBeanToCandidatoBean {
 				candidato.setNome(w.getValorCampo(i));
 			} else if (w.getTipoCampo().get(i).equals("Data nascimento")) {
 
-				DateFormat formatoData = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-				Date dataConvertida = null;
+				SimpleDateFormat sf = new SimpleDateFormat("dd/mm/yyyy");
+				Date dataNascimento = new Date();
 				try {
-					dataConvertida = formatoData.parse(w.getValorCampo(i));
-				} catch (ParseException e) {
-					dataConvertida = null;
-					System.out.println("Erro na tentativa de conversão de data no Converter linha 46:\n" + e);
+					dataNascimento = sf.parse(w.getValorCampo(i));
+
+				} catch (ParseException exc) {
+					System.out.println(exc.getMessage());
 				}
-				candidato.setDataNascimento(dataConvertida);
+				candidato.setDataNascimento(dataNascimento);
 			} else if (w.getTipoCampo().get(i).equals("Vaga")) {
 				vaga.setNomeVaga(w.getValorCampo(i));
-				//vaga.setAumentaQuadro('c');
+				// vaga.setAumentaQuadro('c');
 			} else if (w.getTipoCampo().get(i).equals("Email")) {
 				candidato.setEmail(w.getValorCampo(i));
 			} else if (w.getTipoCampo().get(i).equals("Telefone")) {
@@ -79,9 +80,9 @@ public class ConverterWordpressBeanToCandidatoBean {
 				formacao.setDataConclusao(data);
 			} else if (w.getTipoCampo().get(i).equals("Como ficou sabendo")) {
 				canalInformacao.setNome(w.getValorCampo(i));
-			} 
+			}
 		}
-		
+
 		vaga.setAumentaQuadro('s');
 		vaga.setCargoBean(cargoBean);
 		vaga.setIdTipoVaga('z');
@@ -89,66 +90,95 @@ public class ConverterWordpressBeanToCandidatoBean {
 		vagaCandidato.setCanalInformacao(canalInformacao);
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);
-		
+
 		candidato.setVagaCandidatoBean(vagaCandidato);
 		candidato.setFormacao(formacao);
 		candidato.setVaga(vaga);
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
-		
+
 		return candidato;
 	}
 
 	private Date transformaStringEmDataPadrao(String dataNaoTratada) {
-		
+
 		String dataTratada = "01";
-		DateFormat formatoData = new SimpleDateFormat("dd MM yyyy");
-		
+		DateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+
 		dataNaoTratada = dataNaoTratada.toLowerCase();
-		
-		if(dataNaoTratada.contains("dez") || dataNaoTratada.contains("dezembro") || dataNaoTratada.substring(0, 2).equals("12"))
+
+		if (dataNaoTratada.contains("dez") || dataNaoTratada.contains("dezembro")
+				|| dataNaoTratada.substring(0, 2).equals("12"))
 			dataTratada += "/12";
-		else if(dataNaoTratada.contains("nov") || dataNaoTratada.contains("novembro") || dataNaoTratada.substring(0, 2).equals("11"))
+		else if (dataNaoTratada.contains("nov") || dataNaoTratada.contains("novembro")
+				|| dataNaoTratada.substring(0, 2).equals("11"))
 			dataTratada += "/11";
-		else if(dataNaoTratada.contains("out") || dataNaoTratada.contains("outubro") || dataNaoTratada.substring(0, 2).equals("10"))
+		else if (dataNaoTratada.contains("out") || dataNaoTratada.contains("outubro")
+				|| dataNaoTratada.substring(0, 2).equals("10"))
 			dataTratada += "/10";
-		else if(dataNaoTratada.contains("set") || dataNaoTratada.contains("setembro") || dataNaoTratada.substring(0, 2).equals("09")  || dataNaoTratada.substring(0, 1).equals("9"))
+		else if (dataNaoTratada.contains("set") || dataNaoTratada.contains("setembro")
+				|| dataNaoTratada.substring(0, 2).equals("09") || dataNaoTratada.substring(0, 1).equals("9"))
 			dataTratada += "/09";
-		else if(dataNaoTratada.contains("ago") || dataNaoTratada.contains("agosto") || dataNaoTratada.substring(0, 2).equals("08")  || dataNaoTratada.substring(0, 1).equals("8"))
+		else if (dataNaoTratada.contains("ago") || dataNaoTratada.contains("agosto")
+				|| dataNaoTratada.substring(0, 2).equals("08") || dataNaoTratada.substring(0, 1).equals("8"))
 			dataTratada += "/08";
-		else if(dataNaoTratada.contains("jul") || dataNaoTratada.contains("julho") || dataNaoTratada.substring(0, 2).equals("07")  || dataNaoTratada.substring(0, 1).equals("7"))
+		else if (dataNaoTratada.contains("jul") || dataNaoTratada.contains("julho")
+				|| dataNaoTratada.substring(0, 2).equals("07") || dataNaoTratada.substring(0, 1).equals("7"))
 			dataTratada += "/07";
-		else if(dataNaoTratada.contains("jun") || dataNaoTratada.contains("junho") || dataNaoTratada.substring(0, 2).equals("06")  || dataNaoTratada.substring(0, 1).equals("6"))
+		else if (dataNaoTratada.contains("jun") || dataNaoTratada.contains("junho")
+				|| dataNaoTratada.substring(0, 2).equals("06") || dataNaoTratada.substring(0, 1).equals("6"))
 			dataTratada += "/06";
-		else if(dataNaoTratada.contains("mai") || dataNaoTratada.contains("maio") || dataNaoTratada.substring(0, 2).equals("05")  || dataNaoTratada.substring(0, 1).equals("5"))
+		else if (dataNaoTratada.contains("mai") || dataNaoTratada.contains("maio")
+				|| dataNaoTratada.substring(0, 2).equals("05") || dataNaoTratada.substring(0, 1).equals("5"))
 			dataTratada += "/05";
-		else if(dataNaoTratada.contains("abr") || dataNaoTratada.contains("abril") || dataNaoTratada.substring(0, 2).equals("04")  || dataNaoTratada.substring(0, 1).equals("4"))
+		else if (dataNaoTratada.contains("abr") || dataNaoTratada.contains("abril")
+				|| dataNaoTratada.substring(0, 2).equals("04") || dataNaoTratada.substring(0, 1).equals("4"))
 			dataTratada += "/04";
-		else if(dataNaoTratada.contains("mar") || dataNaoTratada.contains("março") || dataNaoTratada.contains("marco") || dataNaoTratada.substring(0, 2).equals("03")  || dataNaoTratada.substring(0, 1).equals("3"))
+		else if (dataNaoTratada.contains("mar") || dataNaoTratada.contains("março") || dataNaoTratada.contains("marco")
+				|| dataNaoTratada.substring(0, 2).equals("03") || dataNaoTratada.substring(0, 1).equals("3"))
 			dataTratada += "/03";
-		else if(dataNaoTratada.contains("fev") || dataNaoTratada.contains("fevereiro") || dataNaoTratada.substring(0, 2).equals("02")  || dataNaoTratada.substring(0, 1).equals("2"))
+		else if (dataNaoTratada.contains("fev") || dataNaoTratada.contains("fevereiro")
+				|| dataNaoTratada.substring(0, 2).equals("02") || dataNaoTratada.substring(0, 1).equals("2"))
 			dataTratada += "/02";
-		else if(dataNaoTratada.contains("jan") || dataNaoTratada.contains("janeiro") || dataNaoTratada.substring(0, 2).equals("01")  || dataNaoTratada.substring(0, 1).equals("1"))
+		else if (dataNaoTratada.contains("jan") || dataNaoTratada.contains("janeiro")
+				|| dataNaoTratada.substring(0, 2).equals("01") || dataNaoTratada.substring(0, 1).equals("1"))
 			dataTratada += "/01";
-		
+		else
+			dataTratada = null;
+
+		// Pega o ano:
+
 		Date dataConvertida = null;
-		try {
-			dataConvertida = formatoData.parse(dataTratada);
-		} catch (ParseException e) {
-			dataConvertida = null;
-			System.out.println("Erro na tentativa de conversão de data no Converter linha 86:\n" + e);
-		}
 		
+		if (Integer.parseInt(dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length())) >= 2000)
+			dataTratada += "/" + dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
+		else
+			dataTratada = null;
+
+		if (dataTratada != null) {
+			
+			try {
+				dataConvertida = formatoData.parse(dataTratada);
+			} catch (ParseException e) {
+				dataConvertida = null;
+				System.out.println("Erro na tentativa de conversão de data no Converter:\n" + e);
+			}
+		}
+
 		return dataConvertida;
 	}
-
 
 	public List<CandidatoBean> transformaLista(List<CandidatoWordPressBean> listaWordpress) {
 
 		List<CandidatoBean> candidatos = new ArrayList<>();
 
 		for (CandidatoWordPressBean w : listaWordpress) {
-			candidatos.add(this.transformaWordpressEmCandidato(w));
+			
+			CandidatoBean candidato = new CandidatoBean();
+			
+			candidato = this.transformaWordpressEmCandidato(w);
+			
+			candidatos.add(candidato);
 		}
 		return candidatos;
 	}
