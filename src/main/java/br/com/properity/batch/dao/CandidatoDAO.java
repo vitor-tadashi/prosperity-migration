@@ -11,21 +11,36 @@ import java.util.List;
 import java.util.Scanner;
 
 import br.com.properity.batch.bean.CandidatoWordPressBean;
-import br.com.properity.batch.bean.WordpressBean;
 import br.com.properity.batch.connection.ConnectionFactory;
 
 public class CandidatoDAO {
 
-	private final String sqlQuery = "select T1.*, T2.date_created from wp_rg_lead_detail AS T1, wp_rg_lead AS T2  where T1.form_id = 4 and DATE(T2.date_created) > ";
-	private final String teste = "select * from wp_rg_lead_detail WHERE lead_id between 3337 and 3360 and form_id = 4 ORDER BY lead_id asc, field_number asc";
-	
+	private final String sqlQuery = "SELECT" + "lead_id," + "MAX(IF(field_number = '1', value, NULL)) AS '1',"
+			+ "MAX(IF(field_number = '3', value, NULL)) AS '3'," + "MAX(IF(field_number = '8', value, NULL)) AS '8',"
+			+ "MAX(IF(field_number = '15', value, NULL)) AS '15',"
+			+ "MAX(IF(field_number = '10', value, NULL)) AS '10',"
+			+ "MAX(IF(field_number = '11', value, NULL)) AS '11',"
+			+ "MAX(IF(field_number = '27', value, NULL)) AS '27',"
+			+ "MAX(IF(field_number = '28', value, NULL)) AS '28',"
+			+ "MAX(IF(field_number = '29', value, NULL)) AS '29',"
+			+ "MAX(IF(field_number = '31', value, NULL)) AS '31',"
+			+ "MAX(IF(field_number = '32', value, NULL)) AS '32',"
+			+ "MAX(IF(field_number = '33', value, NULL)) AS '33',"
+			+ "MAX(IF(field_number = '14', value, NULL)) AS '14',"
+			+ "MAX(IF(field_number = '16', value, NULL)) AS '16',"
+			+ "MAX(IF(field_number = '18', value, NULL)) AS '18',"
+			+ "MAX(IF(field_number = '23', value, NULL)) AS '23',"
+			+ "MAX(IF(field_number = '20', value, NULL)) AS '20',"
+			+ "MAX(IF(field_number = '21', value, NULL)) AS '21'," + "MAX(IF(field_number = '9', value, NULL)) AS '9'"
+			+ "FROM" + "wp_rg_lead_detail where form_id = 4" + "GROUP BY" + "lead_id";
+
 	private List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
 	private Connection conexao;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	public String DataUltimoCadastro() {
+	public String obterDataUltimoProcessamento() {
 		String date = "";
 		this.stmt = null;
 		this.rs = null;
@@ -48,11 +63,11 @@ public class CandidatoDAO {
 		return date;
 	}
 
-	//Listar:
+	// Listar:
 	public List<CandidatoWordPressBean> listar() {
 		this.stmt = null;
 		this.rs = null;
-		
+
 		// Para executar o batch a partir do mais recente cadastro:
 		String dataMaisRecente = this.pegarDataUltimoCadastroDoArquivo();
 		String buscarCadastrosMaisRecentes = this.sqlQuery + dataMaisRecente;
@@ -60,8 +75,8 @@ public class CandidatoDAO {
 		try {
 			conexao = ConnectionFactory.pegaConexao();
 			this.stmt = conexao.createStatement();
-			//this.stmt.execute(buscarCadastrosMaisRecentes);
-			this.stmt.execute(teste);
+			this.stmt.execute(buscarCadastrosMaisRecentes);
+			this.stmt.execute(sqlQuery);
 			this.rs = this.stmt.getResultSet();
 
 			/*
@@ -106,10 +121,10 @@ public class CandidatoDAO {
 		}
 		return this.listaCandidatos;
 	}
-	
+
 	public String pegarDataUltimoCadastroDoArquivo() {
-		String data = "n foi";
-		
+		String data = "2000-01-01";
+
 		try {
 			Scanner scanner = new Scanner(new File(textFile));
 			data = scanner.useDelimiter("\\Z").next();
@@ -118,7 +133,7 @@ public class CandidatoDAO {
 			System.out.println("Erro ao tentar ler do seguinte arquivo: " + textFile);
 			System.out.println(e);
 		}
-		// System.out.println(data);
+		
 		return data;
 	}
 }

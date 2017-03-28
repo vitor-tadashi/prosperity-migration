@@ -13,15 +13,10 @@ public class CustomItemReader implements ItemReader<WordpressBean> {
 	@Override
 	public WordpressBean read()
 			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		
-		//Thread.sleep(15000);
-		
-		System.out.println("LER LEGAL");
-		
+
 		WordpressBean wordpressBean = new WordpressBean();
-		CandidatoBusiness b = new CandidatoBusiness();
-		
-		wordpressBean.setCandidatos(b.retornaListaBean());
+
+		wordpressBean.setCandidatosWordPress(new CandidatoBusiness().listar());
 		
 		return wordpressBean;
 	}

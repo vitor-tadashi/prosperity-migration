@@ -1,8 +1,5 @@
 package br.com.properity.batch.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CandidatoWordPressBean {
 
 	// Atributos da tabela do wordpress:
