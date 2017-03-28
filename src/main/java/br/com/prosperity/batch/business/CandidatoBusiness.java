@@ -1,4 +1,4 @@
-package br.com.properity.batch.business;
+package br.com.prosperity.batch.business;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import br.com.properity.batch.bean.CandidatoWordPressBean;
-import br.com.properity.batch.dao.CandidatoDAO;
+import br.com.prosperity.batch.bean.CandidatoWordPressBean;
+import br.com.prosperity.batch.dao.CandidatoDAO;
 
 public class CandidatoBusiness {
-	
-	@Autowired
+
 	private CandidatoDAO candidatoDAO;
-	
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
+	
+	public void setCandidatoDAO(CandidatoDAO candidatoDAO) {
+		this.candidatoDAO = candidatoDAO;
+	}
 
 	public List<CandidatoWordPressBean> listar() {
 		return candidatoDAO.listar();
@@ -40,7 +40,7 @@ public class CandidatoBusiness {
 			pwOb.close();
 			fwOb.close();
 
-			// Finalmente armazeno a primeira data nele:
+			// Finalmente armazeno a data nele:
 			out.print("'" + dataNova + "'");
 			out.close();
 		} catch (IOException e) {

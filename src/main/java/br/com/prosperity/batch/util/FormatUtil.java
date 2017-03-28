@@ -1,7 +1,7 @@
-package br.com.properity.batch.util;
+package br.com.prosperity.batch.util;
 
-import bean.CandidatoBean;
-import bean.ContatoBean;
+import br.com.prosperity.bean.CandidatoBean;
+import br.com.prosperity.bean.ContatoBean;
 
 public class FormatUtil {
 

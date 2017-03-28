@@ -1,4 +1,4 @@
-package br.com.properity.batch.bean;
+package br.com.prosperity.batch.bean;
 
 public class CandidatoWordPressBean {
 

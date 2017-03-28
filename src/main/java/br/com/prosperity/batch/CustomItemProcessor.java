@@ -9,32 +9,33 @@ import java.util.List;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import bean.CanalInformacaoBean;
-import bean.CandidatoBean;
-import bean.CargoBean;
-import bean.ContatoBean;
-import bean.EnderecoBean;
-import bean.FormacaoBean;
-import bean.SituacaoAtualBean;
-import bean.TipoCursoBean;
-import bean.VagaBean;
-import bean.VagaCandidatoBean;
-import br.com.properity.batch.bean.CandidatoWordPressBean;
-import br.com.properity.batch.bean.WordpressBean;
+import br.com.prosperity.batch.bean.CandidatoWordPressBean;
+import br.com.prosperity.batch.bean.WordpressBean;
+import br.com.prosperity.bean.CanalInformacaoBean;
+import br.com.prosperity.bean.CandidatoBean;
+import br.com.prosperity.bean.CargoBean;
+import br.com.prosperity.bean.ContatoBean;
+import br.com.prosperity.bean.EnderecoBean;
+import br.com.prosperity.bean.FormacaoBean;
+import br.com.prosperity.bean.SituacaoAtualBean;
+import br.com.prosperity.bean.TipoCursoBean;
+import br.com.prosperity.bean.VagaBean;
+import br.com.prosperity.bean.VagaCandidatoBean;
 
 public class CustomItemProcessor implements ItemProcessor<WordpressBean, WordpressBean> {
 
 	@Override
 	public WordpressBean process(WordpressBean wordPressBean) throws Exception {
 		List<CandidatoBean> candidatos = convert(wordPressBean.getCandidatosWordPress());
-		
+
 		wordPressBean.setCandidatos(candidatos);
-		
+
 		return wordPressBean;
 	}
 
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
+		List<VagaBean> vagas = new ArrayList<>();
 		VagaBean vaga = new VagaBean();
 		ContatoBean contato = new ContatoBean();
 		EnderecoBean endereco = new EnderecoBean();
@@ -48,8 +49,10 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		cargoBean.setNome("x");
 
 		contato.setTelefone(w.getTelefone());
-		vaga.setNomeVaga(w.getNome());
+
 		endereco.setCidade(w.getCidade());
+
+		canalInformacao.setNome(w.getComoFicouSabendo() + w.getComoFicouSabendoOutros());
 
 		tipoCurso.setNome(w.getTipoCurso());
 		situacaoAtual.setDescricao(w.getSituacaoAtual());
@@ -63,7 +66,10 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		vaga.setAumentaQuadro('s');
 		vaga.setCargoBean(cargoBean);
 		vaga.setIdTipoVaga('z');
-		candidato.setValorMin(10);
+		vaga.setNomeVaga(w.getNome());
+		vagas.add(vaga);
+
+		candidato.setValorMin(10.0);
 		vagaCandidato.setCanalInformacao(canalInformacao);
 
 		candidato.setCpf(w.getCPF());
@@ -71,7 +77,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		candidato.setEmail(w.getEmail());
 		candidato.setVagaCandidatoBean(vagaCandidato);
 		candidato.setFormacao(formacao);
-		candidato.setVaga(vaga);
+		candidato.setVagas(vagas);
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
 
@@ -79,6 +85,15 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 	}
 
 	private Date transformaStringData(String dataNaoTratada) {
+
+		if (dataNaoTratada == null || dataNaoTratada.isEmpty())
+			return null;
+
+		if (dataNaoTratada.matches("[a-zA-Z]"))
+			return null;
+		
+		if(dataNaoTratada.length()<6)
+			return null;
 
 		String dataTratada = "01";
 		DateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
@@ -128,12 +143,17 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 		Date dataConvertida = null;
 
-		if (Integer.parseInt(dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length())) >= 2000)
-			dataTratada += "/" + dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
-		else
-			dataTratada = null;
+		if (dataTratada != null)
+			if (!dataTratada.matches("[a-zA-Z]") && dataTratada.length()==5)
+				if (Integer.parseInt(
+						dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length())) >= 2000)
+					dataTratada += "/" + dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
+				else
+					dataTratada = null;
 
-		if (dataTratada != null) {
+		// Se a data não estiver vazia e não conter caracteres, ela parsea:
+		// do contrário retornará null lá embaixo
+		if (dataTratada != null && !dataTratada.matches("[a-zA-Z]")) {
 
 			try {
 				dataConvertida = formatoData.parse(dataTratada);

@@ -1,27 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:batch="http://www.springframework.org/schema/batch"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/batch
-		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
-		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-	">
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/oxm
+						http://www.springframework.org/schema/oxm/spring-oxm-3.2.xsd
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/batch
+						http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-3.2.xsd
+						http://www.springframework.org/schema/jee 
+						http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+						http://www.springframework.org/schema/task 
+						http://www.springframework.org/schema/task/spring-task-3.1.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 	<import resource="../config/context.xml" />
 	<import resource="../config/database.xml" />
 
+	<bean id="candidatoDAO" class="br.com.prosperity.batch.dao.CandidatoDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="candidatoBusiness" class="br.com.prosperity.batch.business.CandidatoBusiness">
+		<property name="candidatoDAO" ref="candidatoDAO" />
+	</bean>
+
 	<bean id="itemProcessor" class="br.com.prosperity.batch.CustomItemProcessor" />
 	<bean id="itemWriter" class="br.com.prosperity.batch.CustomItemWriter" />
-	<bean id="itemReader" class="br.com.prosperity.batch.CustomItemReader" />
+	<bean id="itemReader" class="br.com.prosperity.batch.CustomItemReader">
+		<property name="candidatoBusiness" ref="candidatoBusiness" />
+	</bean>
 
 	<batch:job id="helloWorldJob">
-	  <batch:step id="step1">
-		<batch:tasklet>
-			<batch:chunk reader="itemReader" writer="itemWriter"
-                              processor="itemProcessor" commit-interval="10">
-			</batch:chunk>
-		</batch:tasklet>
-	  </batch:step>
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="itemReader" writer="itemWriter"
+					processor="itemProcessor" commit-interval="10">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
 	</batch:job>
 
 	<bean id="jobLauncher"
@@ -72,4 +96,5 @@
 		</property>
 
 	</bean>
+
 </beans>

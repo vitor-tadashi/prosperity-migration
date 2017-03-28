@@ -1,14 +1,15 @@
-package br.com.properity.batch.bean;
+package br.com.prosperity.batch.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import bean.CandidatoBean;
+import br.com.prosperity.bean.CandidatoBean;
 
 @XmlRootElement(name = "meuXml")
 public class WordpressBean {
-	private List<CandidatoWordPressBean> candidatosWordPress;
+	private List<CandidatoWordPressBean> candidatosWordPress = new ArrayList<>();
 	private List<CandidatoBean> candidatos;
 
 	public WordpressBean(List<CandidatoBean> candidatos) {
