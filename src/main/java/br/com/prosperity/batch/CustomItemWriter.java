@@ -2,6 +2,8 @@ package br.com.prosperity.batch;
 
 import java.util.List;
 
+import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,8 +21,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import br.com.prosperity.batch.bean.WordpressBean;
 
-public class CustomItemWriter implements ItemWriter<WordpressBean>{
-	
+public class CustomItemWriter implements ItemWriter<WordpressBean> {
+
+	//@Produces({ MediaType.APPLICATION_XML })
 	public void writeTo(WordpressBean w) throws Exception {
 		System.out.println("ESCREVER LEGAL");
 
@@ -41,12 +44,11 @@ public class CustomItemWriter implements ItemWriter<WordpressBean>{
 	        StreamResult result = new StreamResult(System.out);
 	        t.transform(source, result);
 	        
-	    	final String url = "http://localhost:8080/servico/can";
+	    	final String url = "http://localhost:8080/servico";
 
 /*			// Get data from the server
 			Client client = Client.create();
 			WebResource resource = client.resource(url);
-
 			resource.post(result);*/
 	    	Client client = Client.create();
 	    	WebResource webResource = client.resource(url);
@@ -62,8 +64,6 @@ public class CustomItemWriter implements ItemWriter<WordpressBean>{
 
 	@Override
 	public void write(List<? extends WordpressBean> arg0) throws Exception {
-
 		writeTo(arg0.get(0));
-		
 	}
 }
