@@ -26,9 +26,13 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 	@Override
 	public WordpressBean process(WordpressBean wordPressBean) throws Exception {
-		List<CandidatoBean> candidatos = convert(wordPressBean.getCandidatosWordPress());
 
-		wordPressBean.setCandidatos(candidatos);
+		try {
+			List<CandidatoBean> candidatos = convert(wordPressBean.getCandidatosWordPress());
+			wordPressBean.setCandidatos(candidatos);
+		} catch (Exception e) {
+			System.out.println("Erro: " + e);
+		}
 
 		return wordPressBean;
 	}
@@ -63,6 +67,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);
 
+		vaga.setLocalTrabalho('o');
 		vaga.setAumentaQuadro('s');
 		vaga.setCargoBean(cargoBean);
 		vaga.setIdTipoVaga('z');
@@ -88,13 +93,15 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 		if (dataNaoTratada == null || dataNaoTratada.isEmpty())
 			return null;
+		
+		if (dataNaoTratada.length() < 6)
+			return null;
 
-		if (dataNaoTratada.matches("[a-zA-Z]"))
+		String ano = dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
+
+		if(ano.matches("[a-zA-Z]"))
 			return null;
 		
-		if(dataNaoTratada.length()<6)
-			return null;
-
 		String dataTratada = "01";
 		DateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -144,16 +151,16 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		Date dataConvertida = null;
 
 		if (dataTratada != null)
-			if (!dataTratada.matches("[a-zA-Z]") && dataTratada.length()==5)
+			if (!ano.contains("/"))
 				if (Integer.parseInt(
 						dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length())) >= 2000)
-					dataTratada += "/" + dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
+					dataTratada += "/" + ano;
 				else
 					dataTratada = null;
 
 		// Se a data não estiver vazia e não conter caracteres, ela parsea:
 		// do contrário retornará null lá embaixo
-		if (dataTratada != null && !dataTratada.matches("[a-zA-Z]")) {
+		if (dataTratada != null && dataTratada.length() == 10) {
 
 			try {
 				dataConvertida = formatoData.parse(dataTratada);
@@ -174,7 +181,12 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 			CandidatoBean candidato = new CandidatoBean();
 
-			candidato = this.transformaWordpressEmCandidato(w);
+			try {
+
+				candidato = this.transformaWordpressEmCandidato(w);
+			} catch (Exception ex) {
+				System.out.println(ex.getMessage());
+			}
 
 			candidatos.add(candidato);
 		}

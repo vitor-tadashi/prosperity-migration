@@ -44,7 +44,6 @@ public class CandidatoDAO {
 			+ "MAX(IF(field_number = '9', value, NULL)) AS 'cpf' "
 			+ "FROM wp_rg_lead_detail where form_id = 4 GROUP BY lead_id";
 
-	private List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
 	private Connection conexao;
 	private Statement stmt = null;
@@ -75,6 +74,8 @@ public class CandidatoDAO {
 
 	// Listar:
 	public List<CandidatoWordPressBean> listar() {
+		List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
+		
 		this.stmt = null;
 		this.rs = null;
 
@@ -135,7 +136,7 @@ public class CandidatoDAO {
 				this.stmt = null;
 			}
 		}
-		return this.listaCandidatos;
+		return listaCandidatos;
 	}
 
 	public String pegarDataUltimoCadastroDoArquivo() {

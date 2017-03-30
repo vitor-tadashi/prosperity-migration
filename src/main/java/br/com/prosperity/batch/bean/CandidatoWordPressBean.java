@@ -1,5 +1,8 @@
 package br.com.prosperity.batch.bean;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "CandidatoWordPressBean")
 public class CandidatoWordPressBean {
 
 	// Atributos da tabela do wordpress:
