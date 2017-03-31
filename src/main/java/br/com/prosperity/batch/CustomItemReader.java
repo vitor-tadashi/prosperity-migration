@@ -21,8 +21,10 @@ public class CustomItemReader implements ItemReader<WordpressBean> {
 			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 		
 		WordpressBean wordpressBean = new WordpressBean();
-
+		
 		wordpressBean.setCandidatosWordPress(candidatoBusiness.listar());
+		
+		candidatoBusiness.gravarLeadIdUltimoProcessamento();
 		
 		return wordpressBean;
 	}

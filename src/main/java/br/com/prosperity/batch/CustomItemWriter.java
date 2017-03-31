@@ -54,9 +54,11 @@ public class CustomItemWriter implements ItemWriter<WordpressBean> {
 	    	WebResource webResource = client.resource(url);
 
 	        // POST method
+	    	if(w.getCandidatosWordPress().size()>10)
+	    	{
 	        ClientResponse response = webResource.accept("application/xml")
 	                .type("application/xml").post(ClientResponse.class, source);
-			
+	    	}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

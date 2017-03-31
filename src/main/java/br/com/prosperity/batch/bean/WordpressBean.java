@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.prosperity.bean.CandidatoBean;
 
@@ -30,7 +31,7 @@ public class WordpressBean {
 		this.candidatos = candidatos;
 	}
 
-    @XmlElement(type=CandidatoWordPressBean.class)
+    @XmlTransient
 	public List<CandidatoWordPressBean> getCandidatosWordPress() {
 		return candidatosWordPress;
 	}

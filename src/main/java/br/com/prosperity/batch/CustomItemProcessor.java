@@ -67,22 +67,24 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);
 
-		vaga.setLocalTrabalho('o');
+		/*vaga.setLocalTrabalho('o');
 		vaga.setAumentaQuadro('s');
 		vaga.setCargoBean(cargoBean);
 		vaga.setIdTipoVaga('z');
-		vaga.setNomeVaga(w.getNome());
+		vaga.setNomeVaga(w.getNome());*/
+		vaga.setId(2);
 		vagas.add(vaga);
 
 		candidato.setValorMin(10.0);
 		vagaCandidato.setCanalInformacao(canalInformacao);
 
+		candidato.setNome(w.getNome());
 		candidato.setCpf(w.getCPF());
 		candidato.setDataNascimento(transformaStringData(w.getDataNascimento()));
 		candidato.setEmail(w.getEmail());
 		candidato.setVagaCandidatoBean(vagaCandidato);
 		candidato.setFormacao(formacao);
-		candidato.setVagas(vagas);
+		//candidato.setVagas(vagas);
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
 

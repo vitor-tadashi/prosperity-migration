@@ -10,9 +10,8 @@ import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.dao.CandidatoDAO;
 
 public class CandidatoBusiness {
-
 	private CandidatoDAO candidatoDAO;
-	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
+	private final String textFile = "target/generated-sources/UltimoLeadId.txt";
 	
 	public void setCandidatoDAO(CandidatoDAO candidatoDAO) {
 		this.candidatoDAO = candidatoDAO;
@@ -22,14 +21,14 @@ public class CandidatoBusiness {
 		return candidatoDAO.listar();
 	}
 
-	public void gravarDataUltimoProcessamento() {
+	public void gravarLeadIdUltimoProcessamento() {
 		try {
 			PrintWriter out = null;
-			String dataNova;
+			String lead;
 			FileWriter fwOb = null;
 			PrintWriter pwOb = null;
 			
-			dataNova = candidatoDAO.obterDataUltimoProcessamento();
+			lead = candidatoDAO.obterLeadIdUltimoProcessamento();
 			
 			out = new PrintWriter(new BufferedWriter(new FileWriter(textFile, true)));
 			fwOb = new FileWriter(textFile, false);
@@ -41,7 +40,7 @@ public class CandidatoBusiness {
 			fwOb.close();
 
 			// Finalmente armazeno a data nele:
-			out.print("'" + dataNova + "'");
+			out.print(lead);
 			out.close();
 		} catch (IOException e) {
 			System.out.println(

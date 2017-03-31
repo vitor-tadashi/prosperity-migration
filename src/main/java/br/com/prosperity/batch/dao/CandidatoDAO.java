@@ -42,15 +42,15 @@ public class CandidatoDAO {
 			+ "MAX(IF(field_number = '20', value, NULL)) AS '20', "
 			+ "MAX(IF(field_number = '21', value, NULL)) AS '21', " 
 			+ "MAX(IF(field_number = '9', value, NULL)) AS 'cpf' "
-			+ "FROM wp_rg_lead_detail where form_id = 4 GROUP BY lead_id";
+			+ "FROM wp_rg_lead_detail where form_id = 4 and lead_id > ";
 
-	private final String textFile = "target/generated-sources/DataUltimoCadastro.txt";
+	private final String textFile = "target/generated-sources/UltimoLeadId.txt";
 	private Connection conexao;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	public String obterDataUltimoProcessamento() {
-		String date = "";
+	public String obterLeadIdUltimoProcessamento() {
+		String lead = "1";
 		this.stmt = null;
 		this.rs = null;
 
@@ -58,18 +58,18 @@ public class CandidatoDAO {
 			conexao = dataSource.getConnection();
 			stmt = conexao.createStatement();
 			// Comando do mySQL para pegar a última data da tabela wp_rg_lead
-			stmt.execute("SELECT max(date_created) FROM wp_rg_lead");
+			stmt.execute("select max(lead_id) from wp_rg_lead_detail");
 			rs = stmt.getResultSet();
 
 			while (this.rs.next()) {
-				date = rs.getString(1);
+				lead = rs.getString(1);
 			}
 
 		} catch (Exception e) {
 			System.out.println("Erro: " + e);
 		}
 
-		return date;
+		return lead;
 	}
 
 	// Listar:
@@ -80,8 +80,8 @@ public class CandidatoDAO {
 		this.rs = null;
 
 		// Para executar o batch a partir do mais recente cadastro:
-		//String dataMaisRecente = this.pegarDataUltimoCadastroDoArquivo();
-		String buscarCadastrosMaisRecentes = this.sqlQuery; //+ dataMaisRecente;
+		String leadIdMaisRecente = this.pegarLeadIUltimoCadastroDoArquivo();
+		String buscarCadastrosMaisRecentes = this.sqlQuery + leadIdMaisRecente + " group by lead_id";
 
 		try {
 			conexao = dataSource.getConnection();
@@ -139,20 +139,23 @@ public class CandidatoDAO {
 		return listaCandidatos;
 	}
 
-	public String pegarDataUltimoCadastroDoArquivo() {
-		String data = "2000-01-01";
+	public String pegarLeadIUltimoCadastroDoArquivo() {
+		String lead = "0";
 
 		try {
 			criarPasta();
 			Scanner scanner = new Scanner(new File(textFile));
-			data = scanner.useDelimiter("\\Z").next();
+			lead = scanner.useDelimiter("\\Z").next();
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Erro ao tentar ler do seguinte arquivo: " + textFile);
 			System.out.println(e);
 		}
+		
+		if(lead.isEmpty() || lead == null)
+			lead = "0";
 
-		return data;
+		return lead;
 	}
 
 	private void criarPasta() {
