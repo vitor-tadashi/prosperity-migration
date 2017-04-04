@@ -50,7 +50,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
 		CargoBean cargoBean = new CargoBean();
 
-		cargoBean.setNome("x");
+		//cargoBean.setNome("x");
 
 		contato.setTelefone(w.getTelefone());
 
@@ -72,7 +72,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		vaga.setCargoBean(cargoBean);
 		vaga.setIdTipoVaga('z');
 		vaga.setNomeVaga(w.getNome());*/
-		vaga.setId(2);
+		vaga.setId(21);
 		vagas.add(vaga);
 
 		candidato.setValorMin(10.0);
@@ -82,7 +82,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		candidato.setCpf(w.getCPF());
 		candidato.setDataNascimento(transformaStringData(w.getDataNascimento()));
 		candidato.setEmail(w.getEmail());
-		candidato.setVagaCandidatoBean(vagaCandidato);
+		//candidato.setVagaCandidatoBean(vagaCandidato);
 		candidato.setFormacao(formacao);
 		//candidato.setVagas(vagas);
 		candidato.setContato(contato);
