@@ -2,8 +2,6 @@ package br.com.prosperity.batch;
 
 import java.util.List;
 
-import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,19 +51,16 @@ public class CustomItemWriter implements ItemWriter<WordpressBean> {
 	    	Client client = Client.create();
 	    	WebResource webResource = client.resource(url);
 
-	        // POST method
-	    	if(w.getCandidatosWordPress().size()>10)
-	    	{
 	        ClientResponse response = webResource.accept("application/xml")
 	                .type("application/xml").post(ClientResponse.class, source);
-	    	}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void write(List<? extends WordpressBean> arg0) throws Exception {
-		writeTo(arg0.get(0));
+	public void write(List<? extends WordpressBean> listaWordpress) throws Exception {
+		writeTo(listaWordpress.get(0));
 	}
 }

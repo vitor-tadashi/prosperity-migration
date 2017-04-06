@@ -5,7 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.batch.item.ItemProcessor;
 
@@ -39,7 +41,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
-		List<VagaBean> vagas = new ArrayList<>();
+		Set<VagaBean> vagas = new HashSet<>();
 		VagaBean vaga = new VagaBean();
 		ContatoBean contato = new ContatoBean();
 		EnderecoBean endereco = new EnderecoBean();
@@ -51,40 +53,71 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		CargoBean cargoBean = new CargoBean();
 
 		//cargoBean.setNome("x");
+		
+		String valorValidado = w.getTelefone().length()<=45 ? w.getTelefone() : null;
+		contato.setTelefone(valorValidado);
+		
+		// ENDEREÇO:
+		
+		valorValidado = w.getCidade().length()<=45 ? w.getCidade() : null;
+		endereco.setCidade(valorValidado);
+		
+		valorValidado = w.getCEP().length()<=45 ? w.getCEP() : null;
+		endereco.setCep(valorValidado);
 
-		contato.setTelefone(w.getTelefone());
+		valorValidado = w.getEstado().length()<=45 ? w.getEstado() : null;
+		endereco.setEstado(valorValidado);
+		
+		valorValidado = w.getComplemento().length()<=45 ? w.getComplemento() : null;
+		endereco.setComplemento(valorValidado);
+		
+		valorValidado = w.getLogradouro().length()<=45 ? w.getLogradouro() : null;
+		endereco.setLogradouro(valorValidado);
+		
+		if(w.getNumeroResidencial().matches("[[0-9]+]") && w.getNumeroResidencial().length()<10) {
+			int numero = Integer.parseInt(w.getNumeroResidencial());
+			endereco.setNumero(numero);
+		} else {
+			endereco.setNumero(-1);
+		}
+		
+		// FIM ENDEREÇO.
 
-		endereco.setCidade(w.getCidade());
-
-		canalInformacao.setNome(w.getComoFicouSabendo() + w.getComoFicouSabendoOutros());
+		valorValidado = w.getComoFicouSabendo().length()<=200 ? w.getComoFicouSabendo() : null;
+		canalInformacao.setNome(valorValidado);
 
 		tipoCurso.setNome(w.getTipoCurso());
+		
 		situacaoAtual.setDescricao(w.getSituacaoAtual());
 
 		formacao.setDataConclusao(transformaStringData(w.getDataFormacao()));
+		if(w.getCurso().length()>100)
+			w.setCurso("");
 		formacao.setNomeCurso(w.getCurso());
 		formacao.setNomeInstituicao(w.getInstituicao());
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);
 
-		/*vaga.setLocalTrabalho('o');
-		vaga.setAumentaQuadro('s');
-		vaga.setCargoBean(cargoBean);
-		vaga.setIdTipoVaga('z');
-		vaga.setNomeVaga(w.getNome());*/
+		// *** INSTANCIAR O VAGABUSINESS e pegar as vagas existentes por id
+		// if (vaga.getNome() == w.getVaga()) set Id else usa vaga já existente
 		vaga.setId(21);
 		vagas.add(vaga);
 
-		candidato.setValorMin(10.0);
+		candidato.setValorMin(Double.parseDouble(w.getPretensaoMinima()));
+		candidato.setValorMax(Double.parseDouble(w.getPretensaoMaxima()));
 		vagaCandidato.setCanalInformacao(canalInformacao);
 
 		candidato.setNome(w.getNome());
+		
+		if(w.getCPF().length()>15)
+			w.setCPF("");
+		
 		candidato.setCpf(w.getCPF());
 		candidato.setDataNascimento(transformaStringData(w.getDataNascimento()));
 		candidato.setEmail(w.getEmail());
-		//candidato.setVagaCandidatoBean(vagaCandidato);
+		candidato.setVagaCandidato(vagaCandidato);;
 		candidato.setFormacao(formacao);
-		//candidato.setVagas(vagas);
+		candidato.setVagas(vagas);
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
 

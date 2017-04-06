@@ -23,143 +23,216 @@ public class CandidatoWordPressBean {
 	private String situacaoAtual;
 	private String grauInstrucao;
 	private String dataFormacao;
-	private String CPF;
 	private String comoFicouSabendo;
-	private String comoFicouSabendoOutros;
-	private String remuneracaoAtual;
-	private String beneficiosAtuais;
-	private String pretensaoSalarial;
-	private String referenciaProfissional;
-	public Long getIdWordpress() {
-		return idWordpress;
+	private String CEP;
+	
+	public String getCEP() {
+		return CEP;
 	}
-	public void setIdWordpress(Long idWordpress) {
-		this.idWordpress = idWordpress;
+
+	public void setCEP(String cEP) {
+		CEP = cEP;
 	}
-	public Long getLead_id() {
-		return lead_id;
+
+	public String getRG() {
+		return RG;
 	}
-	public void setLead_id(Long lead_id) {
-		this.lead_id = lead_id;
+
+	public void setRG(String rG) {
+		RG = rG;
 	}
-	public Integer getForm_id() {
-		return form_id;
+
+	public String getEstado() {
+		return estado;
 	}
-	public void setForm_id(Integer form_id) {
-		this.form_id = form_id;
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
-	public String getNome() {
-		return nome;
+
+	public String getLogradouro() {
+		return logradouro;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
-	public String getEmail() {
-		return email;
+
+	public String getNumeroResidencial() {
+		return numeroResidencial;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+
+	public void setNumeroResidencial(String numeroResidencial) {
+		this.numeroResidencial = numeroResidencial;
 	}
-	public String getDataNascimento() {
-		return dataNascimento;
+
+	public String getComplemento() {
+		return complemento;
 	}
-	public void setDataNascimento(String dataNascimento) {
-		this.dataNascimento = dataNascimento;
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
 	}
-	public String getVaga() {
-		return vaga;
+
+	public String getPretensaoMinima() {
+		return pretensaoMinima;
 	}
-	public void setVaga(String vaga) {
-		this.vaga = vaga;
+
+	public void setPretensaoMinima(String pretensaoMinima) {
+		this.pretensaoMinima = pretensaoMinima;
 	}
-	public String getTelefone() {
-		return telefone;
+
+	public String getPretensaoMaxima() {
+		return pretensaoMaxima;
 	}
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+
+	public void setPretensaoMaxima(String pretensaoMaxima) {
+		this.pretensaoMaxima = pretensaoMaxima;
 	}
-	public String getCidade() {
-		return cidade;
-	}
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-	public String getTipoCurso() {
-		return tipoCurso;
-	}
-	public void setTipoCurso(String tipoCurso) {
-		this.tipoCurso = tipoCurso;
-	}
-	public String getCurso() {
-		return curso;
-	}
-	public void setCurso(String curso) {
-		this.curso = curso;
-	}
-	public String getInstituicao() {
-		return instituicao;
-	}
-	public void setInstituicao(String instituicao) {
-		this.instituicao = instituicao;
-	}
-	public String getSituacaoAtual() {
-		return situacaoAtual;
-	}
-	public void setSituacaoAtual(String situacaoAtual) {
-		this.situacaoAtual = situacaoAtual;
-	}
-	public String getGrauInstrucao() {
-		return grauInstrucao;
-	}
-	public void setGrauInstrucao(String grauInstrucao) {
-		this.grauInstrucao = grauInstrucao;
-	}
-	public String getDataFormacao() {
-		return dataFormacao;
-	}
-	public void setDataFormacao(String dataFormacao) {
-		this.dataFormacao = dataFormacao;
-	}
-	public String getCPF() {
-		return CPF;
-	}
-	public void setCPF(String cPF) {
-		CPF = cPF;
-	}
-	public String getComoFicouSabendo() {
-		return comoFicouSabendo;
-	}
+
 	public void setComoFicouSabendo(String comoFicouSabendo) {
 		this.comoFicouSabendo = comoFicouSabendo;
 	}
-	public String getComoFicouSabendoOutros() {
-		return comoFicouSabendoOutros;
+
+	private String CPF;
+	private String RG;
+	private String estado;
+	private String logradouro;
+	private String numeroResidencial;
+	private String complemento;
+	private String pretensaoMinima;
+	private String pretensaoMaxima;
+
+	public Long getIdWordpress() {
+		return idWordpress;
 	}
-	public void setComoFicouSabendoOutros(String comoFicouSabendoOutros) {
-		this.comoFicouSabendoOutros = comoFicouSabendoOutros;
+
+	public void setIdWordpress(Long idWordpress) {
+		this.idWordpress = idWordpress;
 	}
-	public String getRemuneracaoAtual() {
-		return remuneracaoAtual;
+
+	public Long getLead_id() {
+		return lead_id;
 	}
-	public void setRemuneracaoAtual(String remuneracaoAtual) {
-		this.remuneracaoAtual = remuneracaoAtual;
+
+	public void setLead_id(Long lead_id) {
+		this.lead_id = lead_id;
 	}
-	public String getBeneficiosAtuais() {
-		return beneficiosAtuais;
+
+	public Integer getForm_id() {
+		return form_id;
 	}
-	public void setBeneficiosAtuais(String beneficiosAtuais) {
-		this.beneficiosAtuais = beneficiosAtuais;
+
+	public void setForm_id(Integer form_id) {
+		this.form_id = form_id;
 	}
-	public String getPretensaoSalarial() {
-		return pretensaoSalarial;
+
+	public String getNome() {
+		return nome;
 	}
-	public void setPretensaoSalarial(String pretensaoSalarial) {
-		this.pretensaoSalarial = pretensaoSalarial;
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
-	public String getReferenciaProfissional() {
-		return referenciaProfissional;
+
+	public String getEmail() {
+		return email;
 	}
-	public void setReferenciaProfissional(String referenciaProfissional) {
-		this.referenciaProfissional = referenciaProfissional;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
+	public String getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(String dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public String getVaga() {
+		return vaga;
+	}
+
+	public void setVaga(String vaga) {
+		this.vaga = vaga;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getTipoCurso() {
+		return tipoCurso;
+	}
+
+	public void setTipoCurso(String tipoCurso) {
+		this.tipoCurso = tipoCurso;
+	}
+
+	public String getCurso() {
+		return curso;
+	}
+
+	public void setCurso(String curso) {
+		this.curso = curso;
+	}
+
+	public String getInstituicao() {
+		return instituicao;
+	}
+
+	public void setInstituicao(String instituicao) {
+		this.instituicao = instituicao;
+	}
+
+	public String getSituacaoAtual() {
+		return situacaoAtual;
+	}
+
+	public void setSituacaoAtual(String situacaoAtual) {
+		this.situacaoAtual = situacaoAtual;
+	}
+
+	public String getGrauInstrucao() {
+		return grauInstrucao;
+	}
+
+	public void setGrauInstrucao(String grauInstrucao) {
+		this.grauInstrucao = grauInstrucao;
+	}
+
+	public String getDataFormacao() {
+		return dataFormacao;
+	}
+
+	public void setDataFormacao(String dataFormacao) {
+		this.dataFormacao = dataFormacao;
+	}
+
+	public String getCPF() {
+		return CPF;
+	}
+
+	public void setCPF(String cPF) {
+		CPF = cPF;
+	}
+
+	public String getComoFicouSabendo() {
+		return comoFicouSabendo;
+	}
+
 }

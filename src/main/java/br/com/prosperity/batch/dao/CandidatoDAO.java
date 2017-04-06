@@ -29,19 +29,20 @@ public class CandidatoDAO {
 			+ "MAX(IF(field_number = '15', value, NULL)) AS 'vaga', "
 			+ "MAX(IF(field_number = '10', value, NULL)) AS 'telefone', "
 			+ "MAX(IF(field_number = '11', value, NULL)) AS 'cidade', "
-			+ "MAX(IF(field_number = '27', value, NULL)) AS 'grau instrucao', "
+			+ "MAX(IF(field_number = '31', value, NULL)) AS 'grau instrucao', "
 			+ "MAX(IF(field_number = '28', value, NULL)) AS 'curso', "
 			+ "MAX(IF(field_number = '29', value, NULL)) AS 'instituicao', "
-			+ "MAX(IF(field_number = '31', value, NULL)) AS 'tipoCurso', "
 			+ "MAX(IF(field_number = '32', value, NULL)) AS 'situacaoAtual', "
 			+ "MAX(IF(field_number = '33', value, NULL)) AS 'dataFormacao', "
 			+ "MAX(IF(field_number = '14', value, NULL)) AS 'como ficou sabendo', "
-			+ "MAX(IF(field_number = '16', value, NULL)) AS 'como ficou sabendo outros', "
-			+ "MAX(IF(field_number = '18', value, NULL)) AS '18', "
-			+ "MAX(IF(field_number = '23', value, NULL)) AS '23', "
-			+ "MAX(IF(field_number = '20', value, NULL)) AS '20', "
-			+ "MAX(IF(field_number = '21', value, NULL)) AS '21', " 
-			+ "MAX(IF(field_number = '9', value, NULL)) AS 'cpf' "
+			+ "MAX(IF(field_number = '9', value, NULL)) AS 'cpf', "
+			+ "MAX(IF(field_number = '46', value, NULL)) AS 'rg', "
+			+ "MAX(IF(field_number = '47', value, NULL)) AS 'estado', "
+			+ "MAX(IF(field_number = '48', value, NULL)) AS 'logradouro', "
+			+ "MAX(IF(field_number = '49', value, NULL)) AS 'numeroResidencial', "
+			+ "MAX(IF(field_number = '50', value, NULL)) AS 'complemento', "
+			+ "MAX(IF(field_number = '51', value, NULL)) AS 'pretensaoMinima', "
+			+ "MAX(IF(field_number = '52', value, NULL)) AS 'pretensaoMaxima' "
 			+ "FROM wp_rg_lead_detail where form_id = 4 and lead_id > ";
 
 	private final String textFile = "target/generated-sources/UltimoLeadId.txt";
@@ -98,18 +99,21 @@ public class CandidatoDAO {
 				candidato.setDataNascimento(this.rs.getString("data nascimento"));
 				candidato.setVaga(this.rs.getString("vaga"));
 				candidato.setTelefone(this.rs.getString("telefone"));
-				candidato.setGrauInstrucao(this.rs.getString("cidade"));
+				candidato.setGrauInstrucao(this.rs.getString("grau instrucao"));
 				candidato.setCurso(this.rs.getString("curso"));
 				candidato.setInstituicao(this.rs.getString("instituicao"));
-				candidato.setTipoCurso(this.rs.getString("tipoCurso"));
 				candidato.setSituacaoAtual(this.rs.getString("situacaoAtual"));
 				candidato.setDataFormacao(this.rs.getString("dataFormacao"));
 				candidato.setComoFicouSabendo(this.rs.getString("como ficou sabendo"));
-				candidato.setComoFicouSabendoOutros(this.rs.getString("como ficou sabendo outros"));
-				// candidato.setRemuneracaoAtual(this.rs.getString(15));
-				// candidato.setBeneficiosAtuais(this.rs.getString(16));
 				candidato.setCPF(this.rs.getString("cpf"));
 				candidato.setGrauInstrucao(this.rs.getString("grau instrucao"));
+				candidato.setCidade(this.rs.getString("cidade"));
+				candidato.setLogradouro(this.rs.getString("logradouro"));
+				candidato.setNumeroResidencial("numeroResidencial");
+				candidato.setComplemento(this.rs.getString("complemento"));
+				candidato.setPretensaoMinima(this.rs.getString("pretensaoMinima"));
+				candidato.setPretensaoMinima(this.rs.getString("pretensaoMaxima"));
+				candidato.setRG(this.rs.getString("rg"));
 
 				listaCandidatos.add(candidato);
 			}
@@ -151,9 +155,6 @@ public class CandidatoDAO {
 			System.out.println("Erro ao tentar ler do seguinte arquivo: " + textFile);
 			System.out.println(e);
 		}
-		
-		if(lead.isEmpty() || lead == null)
-			lead = "0";
 
 		return lead;
 	}

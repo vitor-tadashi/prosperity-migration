@@ -53,7 +53,7 @@
 		<property name="jobRepository" ref="jobRepository" />
 	</bean>
 
-	<!-- run every 10 seconds -->
+	<!-- run every 1 minute -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<bean id="cronTrigger"
