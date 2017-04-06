@@ -42,7 +42,7 @@ public class CandidatoDAO {
 			+ "MAX(IF(field_number = '49', value, NULL)) AS 'numeroResidencial', "
 			+ "MAX(IF(field_number = '50', value, NULL)) AS 'complemento', "
 			+ "MAX(IF(field_number = '51', value, NULL)) AS 'pretensaoMinima', "
-			+ "MAX(IF(field_number = '52', value, NULL)) AS 'pretensaoMaxima' "
+			+ "MAX(IF(field_number = '52', value, NULL)) AS 'pretensaoMaxima', "
 			+ "MAX(IF(field_number = '53', value, NULL)) AS 'cep' "
 			+ "FROM wp_rg_lead_detail where form_id = 4 and lead_id > ";
 
