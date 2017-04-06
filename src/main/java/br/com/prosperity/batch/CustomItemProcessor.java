@@ -5,24 +5,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.batch.item.ItemProcessor;
 
 import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.bean.WordpressBean;
-import br.com.prosperity.bean.CanalInformacaoBean;
 import br.com.prosperity.bean.CandidatoBean;
-import br.com.prosperity.bean.CargoBean;
-import br.com.prosperity.bean.ContatoBean;
-import br.com.prosperity.bean.EnderecoBean;
-import br.com.prosperity.bean.FormacaoBean;
-import br.com.prosperity.bean.SituacaoAtualBean;
-import br.com.prosperity.bean.TipoCursoBean;
-import br.com.prosperity.bean.VagaBean;
-import br.com.prosperity.bean.VagaCandidatoBean;
 
 public class CustomItemProcessor implements ItemProcessor<WordpressBean, WordpressBean> {
 
@@ -41,102 +30,108 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
-		Set<VagaBean> vagas = new HashSet<>();
-		VagaBean vaga = new VagaBean();
-		ContatoBean contato = new ContatoBean();
-		EnderecoBean endereco = new EnderecoBean();
-		FormacaoBean formacao = new FormacaoBean();
-		TipoCursoBean tipoCurso = new TipoCursoBean();
-		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
-		CanalInformacaoBean canalInformacao = new CanalInformacaoBean();
-		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
-		CargoBean cargoBean = new CargoBean();
 
-		//cargoBean.setNome("x");
-		
-		String valorValidado = w.getTelefone().length()<=45 ? w.getTelefone() : null;
-		contato.setTelefone(valorValidado);
-		
-		// ENDEREÇO:
-		
-		valorValidado = w.getCidade().length()<=45 ? w.getCidade() : null;
-		endereco.setCidade(valorValidado);
-		
-		valorValidado = w.getCEP().length()<=45 ? w.getCEP() : null;
-		endereco.setCep(valorValidado);
+		// CONTATO BEAN
+		if (w.getTelefone().matches("[0-9]+") && w.getTelefone().length() <= 50)
+			candidato.getContato().setTelefone(w.getTelefone());
 
-		valorValidado = w.getEstado().length()<=45 ? w.getEstado() : null;
-		endereco.setEstado(valorValidado);
-		
-		valorValidado = w.getComplemento().length()<=45 ? w.getComplemento() : null;
-		endereco.setComplemento(valorValidado);
-		
-		valorValidado = w.getLogradouro().length()<=45 ? w.getLogradouro() : null;
-		endereco.setLogradouro(valorValidado);
-		
-		if(w.getNumeroResidencial().matches("[[0-9]+]") && w.getNumeroResidencial().length()<10) {
-			int numero = Integer.parseInt(w.getNumeroResidencial());
-			endereco.setNumero(numero);
-		} else {
-			endereco.setNumero(-1);
+		// ENDEREÇO BEAN
+		candidato.getEndereco().setCep(w.getCEP());
+
+		if (w.getCidade().length() <= 45)
+			candidato.getEndereco().setCidade(w.getCidade());
+
+		if (w.getEstado().length() <= 20)
+			candidato.getEndereco().setEstado(w.getEstado());
+
+		if (w.getLogradouro().length() <= 50)
+			candidato.getEndereco().setLogradouro(w.getLogradouro());
+
+		if (w.getComplemento().length() <= 50)
+			candidato.getEndereco().setComplemento(w.getComplemento());
+
+		if (w.getNumeroResidencial().length() <= 10 && w.getNumeroResidencial().matches("[0-9]+"))
+			candidato.getEndereco().setNumero(Integer.parseInt(w.getNumeroResidencial()));
+
+		// FORMAÇÃO BEAN
+		candidato.getFormacao().setDataConclusao(this.transformaStringData(w.getDataFormacao()));
+
+		if (w.getCurso().length() <= 100)
+			candidato.getFormacao().setNomeCurso(w.getCurso());
+
+		if (w.getInstituicao().length() <= 100)
+			candidato.getFormacao().setNomeInstituicao(w.getInstituicao());
+
+		if (w.getSituacaoAtual().length() <= 50)
+			candidato.getFormacao().getSituacaoAtual().setDescricao(w.getSituacaoAtual());
+
+		if (w.getTipoCurso().length() <= 40)
+			candidato.getFormacao().getTipoCurso().setNome(w.getTipoCurso());
+
+		// VAGA BEAN
+		if (w.getVaga().length() <= 50)
+			candidato.getUltimaVaga().setNomeVaga(w.getVaga());
+
+		// CANDIDATO BEAN
+		candidato.setCpf(w.getCPF());
+
+		if (isDateValid(w.getDataNascimento(), "dd-MM-yyyy")) {
+			try {
+				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+				df.setLenient(false);
+
+				Date dataNasc = df.parse(w.getDataNascimento());
+
+				candidato.setDataNascimento(dataNasc);
+			} catch (ParseException e) {
+			}
+		} else if (isDateValid(w.getDataNascimento(), "MM-dd-yyyy")) {
+			try {
+				DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+				df.setLenient(false);
+
+				Date dataNasc = df.parse(w.getDataNascimento());
+
+				candidato.setDataNascimento(dataNasc);
+			} catch (ParseException e) {
+			}
 		}
-		
-		// FIM ENDEREÇO.
 
-		valorValidado = w.getComoFicouSabendo().length()<=200 ? w.getComoFicouSabendo() : null;
-		canalInformacao.setNome(valorValidado);
-
-		tipoCurso.setNome(w.getTipoCurso());
-		
-		situacaoAtual.setDescricao(w.getSituacaoAtual());
-
-		formacao.setDataConclusao(transformaStringData(w.getDataFormacao()));
-		if(w.getCurso().length()>100)
-			w.setCurso("");
-		formacao.setNomeCurso(w.getCurso());
-		formacao.setNomeInstituicao(w.getInstituicao());
-		formacao.setTipoCurso(tipoCurso);
-		formacao.setSituacaoAtual(situacaoAtual);
-
-		// *** INSTANCIAR O VAGABUSINESS e pegar as vagas existentes por id
-		// if (vaga.getNome() == w.getVaga()) set Id else usa vaga já existente
-		vaga.setId(21);
-		vagas.add(vaga);
+		if (w.getEmail().length() <= 45)
+			candidato.setEmail(w.getEmail());
+		if (w.getNome().length() <= 100)
+			candidato.setNome(w.getNome());
 
 		candidato.setValorMin(Double.parseDouble(w.getPretensaoMinima()));
 		candidato.setValorMax(Double.parseDouble(w.getPretensaoMaxima()));
-		vagaCandidato.setCanalInformacao(canalInformacao);
-
-		candidato.setNome(w.getNome());
 		
-		if(w.getCPF().length()>15)
-			w.setCPF("");
-		
-		candidato.setCpf(w.getCPF());
-		candidato.setDataNascimento(transformaStringData(w.getDataNascimento()));
-		candidato.setEmail(w.getEmail());
-		candidato.setVagaCandidato(vagaCandidato);;
-		candidato.setFormacao(formacao);
-		candidato.setVagas(vagas);
-		candidato.setContato(contato);
-		candidato.setEndereco(endereco);
-
 		return candidato;
+	}
+
+	public boolean isDateValid(String date, String DATE_FORMAT) {
+		try {
+			DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 
 	private Date transformaStringData(String dataNaoTratada) {
 
 		if (dataNaoTratada == null || dataNaoTratada.isEmpty())
 			return null;
-		
+
 		if (dataNaoTratada.length() < 6)
 			return null;
 
 		String ano = dataNaoTratada.substring(dataNaoTratada.length() - 4, dataNaoTratada.length());
 
-		if(ano.matches("[a-zA-Z]"))
+		if (ano.matches("[a-zA-Z]"))
 			return null;
-		
+
 		String dataTratada = "01";
 		DateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
 
