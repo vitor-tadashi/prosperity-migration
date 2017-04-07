@@ -25,6 +25,9 @@ public class CustomItemWriter implements ItemWriter<WordpressBean> {
 	public void writeTo(WordpressBean w) throws Exception {
 		System.out.println("ESCREVER LEGAL");
 
+		if(w.getCandidatos().isEmpty())
+			return;
+		
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(WordpressBean.class);
 			

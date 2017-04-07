@@ -12,6 +12,11 @@ import org.springframework.batch.item.ItemProcessor;
 import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.bean.WordpressBean;
 import br.com.prosperity.bean.CandidatoBean;
+import br.com.prosperity.bean.ContatoBean;
+import br.com.prosperity.bean.EnderecoBean;
+import br.com.prosperity.bean.FormacaoBean;
+import br.com.prosperity.bean.VagaBean;
+import br.com.prosperity.bean.VagaCandidatoBean;
 
 public class CustomItemProcessor implements ItemProcessor<WordpressBean, WordpressBean> {
 
@@ -30,47 +35,60 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
-
+		ContatoBean contato = new ContatoBean();
+		EnderecoBean endereco = new EnderecoBean();
+		FormacaoBean formacao = new FormacaoBean();
+		VagaBean vaga = new VagaBean();
+		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
+		
 		// CONTATO BEAN
-		if (w.getTelefone().matches("[0-9]+") && w.getTelefone().length() <= 50)
-			candidato.getContato().setTelefone(w.getTelefone());
+		if (w.getTelefone().length() <= 50)
+			contato.setTelefone(w.getTelefone());
+		else
+			endereco.setCidade("N/C");
 
 		// ENDEREÇO BEAN
-		candidato.getEndereco().setCep(w.getCEP());
+		endereco.setCep(w.getCEP());
 
 		if (w.getCidade().length() <= 45)
-			candidato.getEndereco().setCidade(w.getCidade());
+			endereco.setCidade(w.getCidade());
+		else
+			endereco.setCidade("N/C");
 
 		if (w.getEstado().length() <= 20)
-			candidato.getEndereco().setEstado(w.getEstado());
-
+			endereco.setEstado(w.getEstado());
+		else
+			endereco.setCidade("N/C");
+		
 		if (w.getLogradouro().length() <= 50)
-			candidato.getEndereco().setLogradouro(w.getLogradouro());
+			endereco.setLogradouro(w.getLogradouro());
+		else
+			endereco.setCidade("N/C");
 
 		if (w.getComplemento().length() <= 50)
-			candidato.getEndereco().setComplemento(w.getComplemento());
+			endereco.setComplemento(w.getComplemento());
 
 		if (w.getNumeroResidencial().length() <= 10 && w.getNumeroResidencial().matches("[0-9]+"))
-			candidato.getEndereco().setNumero(Integer.parseInt(w.getNumeroResidencial()));
+			endereco.setNumero(Integer.parseInt(w.getNumeroResidencial()));
 
 		// FORMAÇÃO BEAN
-		candidato.getFormacao().setDataConclusao(this.transformaStringData(w.getDataFormacao()));
+		formacao.setDataConclusao(this.transformaStringData(w.getDataFormacao()));
 
 		if (w.getCurso().length() <= 100)
-			candidato.getFormacao().setNomeCurso(w.getCurso());
+			formacao.setNomeCurso(w.getCurso());
 
 		if (w.getInstituicao().length() <= 100)
-			candidato.getFormacao().setNomeInstituicao(w.getInstituicao());
+			formacao.setNomeInstituicao(w.getInstituicao());
 
 		if (w.getSituacaoAtual().length() <= 50)
-			candidato.getFormacao().getSituacaoAtual().setDescricao(w.getSituacaoAtual());
+			formacao.getSituacaoAtual().setDescricao(w.getSituacaoAtual());
 
 		if (w.getTipoCurso().length() <= 40)
-			candidato.getFormacao().getTipoCurso().setNome(w.getTipoCurso());
+			formacao.getTipoCurso().setNome(w.getTipoCurso());
 
 		// VAGA BEAN
 		if (w.getVaga().length() <= 50)
-			candidato.getUltimaVaga().setNomeVaga(w.getVaga());
+			vaga.setNomeVaga(w.getVaga());
 
 		// CANDIDATO BEAN
 		candidato.setCpf(w.getCPF());
@@ -104,6 +122,14 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 		candidato.setValorMin(Double.parseDouble(w.getPretensaoMinima()));
 		candidato.setValorMax(Double.parseDouble(w.getPretensaoMaxima()));
+		
+		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
+		vagaCandidato.setVaga(vaga);
+		
+		candidato.setVagaCandidato(vagaCandidato);
+		candidato.setContato(contato);
+		candidato.setEndereco(endereco);
+		candidato.setFormacao(formacao);
 		
 		return candidato;
 	}
@@ -215,7 +241,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 
 				candidato = this.transformaWordpressEmCandidato(w);
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			}
 
 			candidatos.add(candidato);
