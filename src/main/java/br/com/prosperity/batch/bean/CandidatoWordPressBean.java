@@ -25,6 +25,13 @@ public class CandidatoWordPressBean {
 	private String dataFormacao;
 	private String comoFicouSabendo;
 	private String CEP;
+	private String CPF;
+	private String RG;
+	private String estado;
+	private String logradouro;
+	private String numeroResidencial;
+	private String complemento;
+	private String pretensao;
 	
 	public String getCEP() {
 		return CEP;
@@ -74,34 +81,17 @@ public class CandidatoWordPressBean {
 		this.complemento = complemento;
 	}
 
-	public String getPretensaoMinima() {
-		return pretensaoMinima;
+	public String getPretensao() {
+		return pretensao;
 	}
 
-	public void setPretensaoMinima(String pretensaoMinima) {
-		this.pretensaoMinima = pretensaoMinima;
-	}
-
-	public String getPretensaoMaxima() {
-		return pretensaoMaxima;
-	}
-
-	public void setPretensaoMaxima(String pretensaoMaxima) {
-		this.pretensaoMaxima = pretensaoMaxima;
+	public void setPretensao(String pretensao) {
+		this.pretensao = pretensao;
 	}
 
 	public void setComoFicouSabendo(String comoFicouSabendo) {
 		this.comoFicouSabendo = comoFicouSabendo;
 	}
-
-	private String CPF;
-	private String RG;
-	private String estado;
-	private String logradouro;
-	private String numeroResidencial;
-	private String complemento;
-	private String pretensaoMinima;
-	private String pretensaoMaxima;
 
 	public Long getIdWordpress() {
 		return idWordpress;

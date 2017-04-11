@@ -23,27 +23,26 @@ public class CandidatoDAO {
 	}
 
 	private final String sqlQuery = "SELECT lead_id, " 
-			+ "MAX(IF(field_number = '1', value, NULL)) AS 'nome', "
-			+ "MAX(IF(field_number = '3', value, NULL)) AS 'email', " 
-			+ "MAX(IF(field_number = '8', value, NULL)) AS 'data nascimento', "
-			+ "MAX(IF(field_number = '15', value, NULL)) AS 'vaga', "
-			+ "MAX(IF(field_number = '10', value, NULL)) AS 'telefone', "
-			+ "MAX(IF(field_number = '11', value, NULL)) AS 'cidade', "
-			+ "MAX(IF(field_number = '31', value, NULL)) AS 'grau instrucao', "
-			+ "MAX(IF(field_number = '28', value, NULL)) AS 'curso', "
-			+ "MAX(IF(field_number = '29', value, NULL)) AS 'instituicao', "
-			+ "MAX(IF(field_number = '32', value, NULL)) AS 'situacaoAtual', "
-			+ "MAX(IF(field_number = '33', value, NULL)) AS 'dataFormacao', "
-			+ "MAX(IF(field_number = '14', value, NULL)) AS 'como ficou sabendo', "
-			+ "MAX(IF(field_number = '9', value, NULL)) AS 'cpf', "
-			+ "MAX(IF(field_number = '46', value, NULL)) AS 'rg', "
-			+ "MAX(IF(field_number = '47', value, NULL)) AS 'estado', "
-			+ "MAX(IF(field_number = '48', value, NULL)) AS 'logradouro', "
-			+ "MAX(IF(field_number = '49', value, NULL)) AS 'numeroResidencial', "
-			+ "MAX(IF(field_number = '50', value, NULL)) AS 'complemento', "
-			+ "MAX(IF(field_number = '51', value, NULL)) AS 'pretensaoMinima', "
-			+ "MAX(IF(field_number = '52', value, NULL)) AS 'pretensaoMaxima', "
-			+ "MAX(IF(field_number = '53', value, NULL)) AS 'cep' "
+			+ "MAX(IF(field_number = '1', value, 'n/c')) AS 'nome', "
+			+ "MAX(IF(field_number = '3', value, 'n/c')) AS 'email', " 
+			+ "MAX(IF(field_number = '8', value, '01/01/1900')) AS 'data nascimento', "
+			+ "MAX(IF(field_number = '15', value, 'n/c')) AS 'vaga', "
+			+ "MAX(IF(field_number = '10', value, 'n/c')) AS 'telefone', "
+			+ "MAX(IF(field_number = '11', value, 'n/c')) AS 'cidade', "
+			+ "MAX(IF(field_number = '31', value, 'n/c')) AS 'grau instrucao', "
+			+ "MAX(IF(field_number = '28', value, 'n/c')) AS 'curso', "
+			+ "MAX(IF(field_number = '29', value, 'n/c')) AS 'instituicao', "
+			+ "MAX(IF(field_number = '32', value, 'n/c')) AS 'situacaoAtual', "
+			+ "MAX(IF(field_number = '33', value, '01/01/1900')) AS 'dataFormacao', "
+			+ "MAX(IF(field_number = '14', value, 'n/c')) AS 'como ficou sabendo', "
+			+ "MAX(IF(field_number = '9', value, 'n/c')) AS 'cpf', "
+			+ "MAX(IF(field_number = '46', value, 'n/c')) AS 'rg', "
+			+ "MAX(IF(field_number = '47', value, 'n/c')) AS 'estado', "
+			+ "MAX(IF(field_number = '48', value, 'n/c')) AS 'logradouro', "
+			+ "MAX(IF(field_number = '49', value, 'n/c')) AS 'numeroResidencial', "
+			+ "MAX(IF(field_number = '50', value, 'n/c')) AS 'complemento', "
+			+ "MAX(IF(field_number = '52', value, 'n/c')) AS 'pretensao', "
+			+ "MAX(IF(field_number = '53', value, 'n/c')) AS 'cep' "
 			+ "FROM wp_rg_lead_detail where form_id = 4 and lead_id > ";
 
 	private final String textFile = "target/generated-sources/UltimoLeadId.txt";
@@ -112,8 +111,7 @@ public class CandidatoDAO {
 				candidato.setLogradouro(this.rs.getString("logradouro"));
 				candidato.setNumeroResidencial("numeroResidencial");
 				candidato.setComplemento(this.rs.getString("complemento"));
-				candidato.setPretensaoMinima(this.rs.getString("pretensaoMinima"));
-				candidato.setPretensaoMinima(this.rs.getString("pretensaoMaxima"));
+				candidato.setPretensao(this.rs.getString("pretensao"));
 				candidato.setRG(this.rs.getString("rg"));
 				candidato.setCEP(this.rs.getString("cep"));
 

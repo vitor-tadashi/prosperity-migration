@@ -11,10 +11,15 @@ import org.springframework.batch.item.ItemProcessor;
 
 import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.bean.WordpressBean;
+import br.com.prosperity.batch.util.VagaUtil;
 import br.com.prosperity.bean.CandidatoBean;
 import br.com.prosperity.bean.ContatoBean;
 import br.com.prosperity.bean.EnderecoBean;
 import br.com.prosperity.bean.FormacaoBean;
+import br.com.prosperity.bean.SituacaoAtualBean;
+import br.com.prosperity.bean.StatusCandidatoBean;
+import br.com.prosperity.bean.TipoCursoBean;
+import br.com.prosperity.bean.UsuarioBean;
 import br.com.prosperity.bean.VagaBean;
 import br.com.prosperity.bean.VagaCandidatoBean;
 
@@ -40,97 +45,185 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		FormacaoBean formacao = new FormacaoBean();
 		VagaBean vaga = new VagaBean();
 		VagaCandidatoBean vagaCandidato = new VagaCandidatoBean();
+		TipoCursoBean tipoCurso = new TipoCursoBean();
+		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
+		StatusCandidatoBean statusCandidato = new StatusCandidatoBean();
+		UsuarioBean usuario = new UsuarioBean();
+
+		VagaUtil.adicionaNovaVaga(w.getVaga());
 		
+		situacaoAtual.setId(9);
+
 		// CONTATO BEAN
-		if (w.getTelefone().length() <= 50)
-			contato.setTelefone(w.getTelefone());
-		else
-			endereco.setCidade("N/C");
+		// Campo obrigatório:
+		if (w.getTelefone() != null) {
+			if (w.getTelefone().length() <= 50 && !"".equals(w.getTelefone()))
+				contato.setTelefone(w.getTelefone());
+			else
+				contato.setTelefone("N/C");
+		} else
+			contato.setTelefone("N/C");
 
 		// ENDEREÇO BEAN
-		endereco.setCep(w.getCEP());
+		// Campo obrigatório:
+		if (w.getCEP() != null) {
+			if (w.getCEP().length() <= 15 && !"".equals(w.getCEP()))
+				endereco.setCep(w.getCEP());
+			else
+				endereco.setCep("N/C");
+		} else
+			endereco.setCep("N/C");
 
-		if (w.getCidade().length() <= 45)
-			endereco.setCidade(w.getCidade());
-		else
+		// Campo obrigatório:
+		if (w.getCidade() != null) {
+			if (w.getCidade().length() <= 45 && !"".equals(w.getCidade()))
+				endereco.setCidade(w.getCidade());
+			else
+				endereco.setCidade("N/C");
+		} else
 			endereco.setCidade("N/C");
 
-		if (w.getEstado().length() <= 20)
-			endereco.setEstado(w.getEstado());
-		else
-			endereco.setCidade("N/C");
-		
-		if (w.getLogradouro().length() <= 50)
-			endereco.setLogradouro(w.getLogradouro());
-		else
-			endereco.setCidade("N/C");
+		// Campo obrigatório:
+		if (w.getEstado() != null) {
+			if (w.getEstado().length() <= 20 && !"".equals(w.getEstado()))
+				endereco.setEstado(w.getEstado());
+			else
+				endereco.setEstado("N/C");
+		} else
+			endereco.setEstado("N/C");
 
-		if (w.getComplemento().length() <= 50)
-			endereco.setComplemento(w.getComplemento());
+		// Campo obrigatório:
+		if (w.getLogradouro() != null) {
+			if (w.getLogradouro().length() <= 50)
+				endereco.setLogradouro(w.getLogradouro());
+			else
+				endereco.setLogradouro("N/C");
+		} else
+			endereco.setLogradouro("N/C");
 
-		if (w.getNumeroResidencial().length() <= 10 && w.getNumeroResidencial().matches("[0-9]+"))
-			endereco.setNumero(Integer.parseInt(w.getNumeroResidencial()));
+		if (w.getComplemento() != null)
+			if (w.getComplemento().length() <= 50 && !"".equals(w.getComplemento()))
+				endereco.setComplemento(w.getComplemento());
+
+		if (w.getNumeroResidencial() != null)
+			if (w.getNumeroResidencial().length() <= 10 && w.getNumeroResidencial().matches("[0-9]")
+					&& !w.getNumeroResidencial().equals(null))
+				endereco.setNumero(Integer.parseInt(w.getNumeroResidencial()));
 
 		// FORMAÇÃO BEAN
-		formacao.setDataConclusao(this.transformaStringData(w.getDataFormacao()));
+		if (w.getDataFormacao() != null) {
+			if (!w.getDataFormacao().equals(null))
+				formacao.setDataConclusao(this.transformaStringData(w.getDataFormacao()));
+			else
+				formacao.setDataConclusao(this.transformaStringData("12/1912"));
+		} else
+			formacao.setDataConclusao(this.transformaStringData("12/1912"));
 
-		if (w.getCurso().length() <= 100)
-			formacao.setNomeCurso(w.getCurso());
+		if (w.getCurso() != null) {
+			if (w.getCurso().length() <= 100 && !w.getCurso().equals(null))
+				formacao.setNomeCurso(w.getCurso());
+			else
+				formacao.setNomeCurso("N/C");
+		} else
+			formacao.setNomeCurso("N/C");
 
-		if (w.getInstituicao().length() <= 100)
-			formacao.setNomeInstituicao(w.getInstituicao());
+		if (w.getInstituicao() != null) {
+			if (w.getInstituicao().length() <= 100 && !w.getInstituicao().equals(null))
+				formacao.setNomeInstituicao(w.getInstituicao());
+			else
+				formacao.setNomeInstituicao("N/C");
+		} else
+			formacao.setNomeInstituicao("N/C");
 
-		if (w.getSituacaoAtual().length() <= 50)
-			formacao.getSituacaoAtual().setDescricao(w.getSituacaoAtual());
+		if (w.getSituacaoAtual() != null)
+			if (w.getSituacaoAtual().length() <= 50 && !"".equals(w.getSituacaoAtual()))
+				situacaoAtual.setDescricao(w.getSituacaoAtual());
 
-		if (w.getTipoCurso().length() <= 40)
-			formacao.getTipoCurso().setNome(w.getTipoCurso());
+		if (w.getTipoCurso() != null)
+			if (w.getTipoCurso().length() <= 40 && !"".equals(w.getTipoCurso()))
+				tipoCurso.setNome(w.getTipoCurso());
 
 		// VAGA BEAN
 		if (w.getVaga().length() <= 50)
 			vaga.setNomeVaga(w.getVaga());
 
+		int idVaga = VagaUtil.getIdNomeVaga(w.getVaga());
+
+		if (idVaga != -1)
+			vaga.setId(idVaga);
+		else {
+			vaga.setId(999);
+			vaga.setNomeVaga("Vaga Inválida");
+		}
 		// CANDIDATO BEAN
-		candidato.setCpf(w.getCPF());
+		if (w.getCPF().length() <= 15 && w.getCPF().length() > 0)
+			candidato.setCpf(w.getCPF());
+		else
+			candidato.setCpf("111111111-1");
 
 		if (isDateValid(w.getDataNascimento(), "dd-MM-yyyy")) {
 			try {
+				String brazilianPattern = "\\d{2}-\\d{2}-\\d{4}";
 				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 				df.setLenient(false);
-
-				Date dataNasc = df.parse(w.getDataNascimento());
-
-				candidato.setDataNascimento(dataNasc);
+				Date dataNasc;
+				if (w.getDataNascimento().matches(brazilianPattern)) {
+					dataNasc = df.parse(w.getDataNascimento());
+					candidato.setDataNascimento(dataNasc);
+				} else {
+					// Valor inválido digitado pelo usuário:
+					dataNasc = df.parse("01-01-1980");
+					candidato.setDataNascimento(dataNasc);
+				}
 			} catch (ParseException e) {
+				e.printStackTrace();
 			}
-		} else if (isDateValid(w.getDataNascimento(), "MM-dd-yyyy")) {
+		} else {
 			try {
-				DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 				df.setLenient(false);
+				Date dataNasc;
 
-				Date dataNasc = df.parse(w.getDataNascimento());
-
+				// Valor inválido digitado pelo usuário:
+				dataNasc = df.parse("01-01-1980");
 				candidato.setDataNascimento(dataNasc);
+
 			} catch (ParseException e) {
+				e.printStackTrace();
 			}
 		}
 
-		if (w.getEmail().length() <= 45)
+		if (w.getEmail().length() <= 45 && w.getEmail().length() > 0)
 			candidato.setEmail(w.getEmail());
-		if (w.getNome().length() <= 100)
-			candidato.setNome(w.getNome());
+		else
+			candidato.setEmail("email.invalido@verity.com.br");
 
-		candidato.setValorMin(Double.parseDouble(w.getPretensaoMinima()));
-		candidato.setValorMax(Double.parseDouble(w.getPretensaoMaxima()));
-		
+		if (w.getNome().length() <= 100 && w.getEmail().length() > 0)
+			candidato.setNome(w.getNome());
+		else
+			candidato.setNome("Nome inválido");
+
+		if (w.getPretensao() != null && !w.getPretensao().isEmpty())
+			candidato.setValorPretensao(1000.0);
+		else
+			candidato.setValorPretensao(1000.0);
+
 		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
-		vagaCandidato.setVaga(vaga);
 		
+		usuario.setId(47);
+		usuario.setSenha("1234");
+		statusCandidato.setUsuario(usuario);
+		
+		vagaCandidato.setVaga(vaga);
+
+		formacao.setTipoCurso(tipoCurso);
+		formacao.setSituacaoAtual(situacaoAtual);
+
 		candidato.setVagaCandidato(vagaCandidato);
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
 		candidato.setFormacao(formacao);
-		
+
 		return candidato;
 	}
 
