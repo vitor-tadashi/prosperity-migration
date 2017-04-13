@@ -11,7 +11,6 @@ import org.springframework.batch.item.ItemProcessor;
 
 import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.bean.WordpressBean;
-import br.com.prosperity.batch.util.VagaUtil;
 import br.com.prosperity.bean.CandidatoBean;
 import br.com.prosperity.bean.ContatoBean;
 import br.com.prosperity.bean.EnderecoBean;
@@ -38,6 +37,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		return wordPressBean;
 	}
 
+	// Método PRINCIPAL CONVERSOR:
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
 		CandidatoBean candidato = new CandidatoBean();
 		ContatoBean contato = new ContatoBean();
@@ -49,10 +49,6 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
 		StatusCandidatoBean statusCandidato = new StatusCandidatoBean();
 		UsuarioBean usuario = new UsuarioBean();
-
-		VagaUtil.adicionaNovaVaga(w.getVaga());
-		
-		situacaoAtual.setId(9);
 
 		// CONTATO BEAN
 		// Campo obrigatório:
@@ -135,26 +131,19 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		} else
 			formacao.setNomeInstituicao("N/C");
 
-		if (w.getSituacaoAtual() != null)
+		if (w.getSituacaoAtual() != null) {
 			if (w.getSituacaoAtual().length() <= 50 && !"".equals(w.getSituacaoAtual()))
-				situacaoAtual.setDescricao(w.getSituacaoAtual());
+				situacaoAtual.setId(pegaIdSituacao(w.getSituacaoAtual()));
+		} else
+			situacaoAtual.setId(9);
 
 		if (w.getTipoCurso() != null)
 			if (w.getTipoCurso().length() <= 40 && !"".equals(w.getTipoCurso()))
-				tipoCurso.setNome(w.getTipoCurso());
+				tipoCurso.setId(pegaIdTipoCurso(w.getTipoCurso()));
 
 		// VAGA BEAN
-		if (w.getVaga().length() <= 50)
-			vaga.setNomeVaga(w.getVaga());
+		vaga.setId(10);
 
-		int idVaga = VagaUtil.getIdNomeVaga(w.getVaga());
-
-		if (idVaga != -1)
-			vaga.setId(idVaga);
-		else {
-			vaga.setId(999);
-			vaga.setNomeVaga("Vaga Inválida");
-		}
 		// CANDIDATO BEAN
 		if (w.getCPF().length() <= 15 && w.getCPF().length() > 0)
 			candidato.setCpf(w.getCPF());
@@ -209,11 +198,11 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			candidato.setValorPretensao(1000.0);
 
 		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
-		
+
 		usuario.setId(47);
 		usuario.setSenha("1234");
 		statusCandidato.setUsuario(usuario);
-		
+
 		vagaCandidato.setVaga(vaga);
 
 		formacao.setTipoCurso(tipoCurso);
@@ -225,6 +214,63 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		candidato.setFormacao(formacao);
 
 		return candidato;
+	}
+
+	private Integer pegaIdTipoCurso(String tipoCurso) {
+
+		int id;
+
+		switch (tipoCurso) {
+		case "Formação Escolar Fundamental (1° grau) e Média (2° grau)":
+			id = 4;
+			break;
+		case "Curso Técnico - Médio (2º Grau)":
+			id = 6;
+			break;
+		case "Graduação":
+			id = 7;
+			break;
+		case "Pós-graduação – Especialização":
+			id = 9;
+			break;
+		case "Pós-graduação – MBA":
+			id = 10;
+			break;
+		case "Pós-graduação – Mestrado":
+			id = 12;
+			break;
+		case "Pós-graduação – Doutorado":
+			id = 15;
+			break;
+		default:
+			id = 7; // Graduação default
+			break;
+		}
+
+		return id;
+	}
+
+	private Integer pegaIdSituacao(String situacaoAtual) {
+
+		int id = 9; // Cursando
+
+		switch (situacaoAtual) {
+		case "Cursando":
+			id = 9;
+			break;
+		case "Concluido":
+		case "Concluído":
+			id = 1009;
+			break;
+		case "Interrompido":
+			id = 1010;
+			break;
+		default:
+			id = 9;
+			break;
+		}
+
+		return id;
 	}
 
 	public boolean isDateValid(String date, String DATE_FORMAT) {
@@ -337,7 +383,9 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 				ex.printStackTrace();
 			}
 
-			candidatos.add(candidato);
+			if (candidato.getCpf() != null && candidato.getNome() != null)
+				if (!"".equals(candidato.getCpf()) && !"".equals(candidato.getNome()))
+					candidatos.add(candidato);
 		}
 		return candidatos;
 	}
