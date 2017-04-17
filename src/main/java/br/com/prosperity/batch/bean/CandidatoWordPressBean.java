@@ -32,7 +32,16 @@ public class CandidatoWordPressBean {
 	private String numeroResidencial;
 	private String complemento;
 	private String pretensao;
+	private String curriculo;
 	
+	public String getCurriculo() {
+		return curriculo;
+	}
+
+	public void setCurriculo(String curriculo) {
+		this.curriculo = curriculo;
+	}
+
 	public String getCEP() {
 		return CEP;
 	}

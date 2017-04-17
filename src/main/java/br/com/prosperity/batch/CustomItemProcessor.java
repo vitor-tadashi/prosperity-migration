@@ -11,6 +11,7 @@ import org.springframework.batch.item.ItemProcessor;
 
 import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 import br.com.prosperity.batch.bean.WordpressBean;
+import br.com.prosperity.bean.CanalInformacaoBean;
 import br.com.prosperity.bean.CandidatoBean;
 import br.com.prosperity.bean.ContatoBean;
 import br.com.prosperity.bean.EnderecoBean;
@@ -37,8 +38,9 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		return wordPressBean;
 	}
 
-	// Método PRINCIPAL CONVERSOR:
+	// PRINCIPAL CONVERSOR:
 	private CandidatoBean transformaWordpressEmCandidato(CandidatoWordPressBean w) {
+		CanalInformacaoBean canalInformacao = new CanalInformacaoBean();
 		CandidatoBean candidato = new CandidatoBean();
 		ContatoBean contato = new ContatoBean();
 		EnderecoBean endereco = new EnderecoBean();
@@ -49,6 +51,12 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
 		StatusCandidatoBean statusCandidato = new StatusCandidatoBean();
 		UsuarioBean usuario = new UsuarioBean();
+
+		// CANAL INFORMACAO BEAN:
+		if (w.getComoFicouSabendo() != null)
+			canalInformacao.setId(pegarIdCanal(w.getComoFicouSabendo()));
+		else
+			canalInformacao.setId(9); // Outros
 
 		// CONTATO BEAN
 		// Campo obrigatório:
@@ -137,12 +145,14 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		} else
 			situacaoAtual.setId(9);
 
-		if (w.getTipoCurso() != null)
+		if (w.getTipoCurso() != null) {
 			if (w.getTipoCurso().length() <= 40 && !"".equals(w.getTipoCurso()))
 				tipoCurso.setId(pegaIdTipoCurso(w.getTipoCurso()));
+		} else
+			tipoCurso.setId(16);
 
-		// VAGA BEAN
-		vaga.setId(10);
+		// VAGA BEAN CRIADA ESPECIALMENTE PARA OS CANDIDATOS DO WORDPRESS:
+		vaga.setId(1202);
 
 		// CANDIDATO BEAN
 		if (w.getCPF().length() <= 15 && w.getCPF().length() > 0)
@@ -150,31 +160,25 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		else
 			candidato.setCpf("111111111-1");
 
-		if (isDateValid(w.getDataNascimento(), "dd-MM-yyyy")) {
+		if (isDateValid(w.getDataNascimento(), "dd/MM/yyyy")) {
 			try {
-				String brazilianPattern = "\\d{2}-\\d{2}-\\d{4}";
-				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				df.setLenient(false);
 				Date dataNasc;
-				if (w.getDataNascimento().matches(brazilianPattern)) {
-					dataNasc = df.parse(w.getDataNascimento());
-					candidato.setDataNascimento(dataNasc);
-				} else {
-					// Valor inválido digitado pelo usuário:
-					dataNasc = df.parse("01-01-1980");
-					candidato.setDataNascimento(dataNasc);
-				}
+				dataNasc = df.parse(w.getDataNascimento());
+				candidato.setDataNascimento(dataNasc);
+
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+				DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 				df.setLenient(false);
 				Date dataNasc;
 
 				// Valor inválido digitado pelo usuário:
-				dataNasc = df.parse("01-01-1980");
+				dataNasc = df.parse("01/01/1900");
 				candidato.setDataNascimento(dataNasc);
 
 			} catch (ParseException e) {
@@ -197,13 +201,21 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		else
 			candidato.setValorPretensao(1000.0);
 
-		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
+		if (w.getRG() != null)
+			candidato.setRg(w.getRG());
+		else
+			candidato.setRg("000");
 
-		usuario.setId(47);
-		usuario.setSenha("1234");
+		if (w.getCurriculo() != null)
+			candidato.setCurriculoTexto(w.getCurriculo());
+
+		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
+		usuario.setId(1040);
+
 		statusCandidato.setUsuario(usuario);
 
 		vagaCandidato.setVaga(vaga);
+		vagaCandidato.setCanalInformacao(canalInformacao);
 
 		formacao.setTipoCurso(tipoCurso);
 		formacao.setSituacaoAtual(situacaoAtual);
@@ -212,8 +224,42 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		candidato.setContato(contato);
 		candidato.setEndereco(endereco);
 		candidato.setFormacao(formacao);
+		candidato.setUsuario(usuario);
 
 		return candidato;
+	}
+
+	private Integer pegarIdCanal(String comoFicouSabendo) {
+		int id;
+
+		switch (comoFicouSabendo) {
+		case "SITE VERITY":
+			id = 2;
+			break;
+		case "FACEBOOK":
+			id = 3;
+			break;
+		case "LINKEDIN":
+			id = 4;
+			break;
+		case "APINFO":
+			id = 5;
+			break;
+		case "CATHO":
+			id = 6;
+			break;
+		case "OUTROS SITES DE OPORTUNIDADES":
+			id = 7;
+			break;
+		case "INDICAÇÃO DE COLEGAS":
+			id = 8;
+			break;
+		default:
+			id = 9; // Outros default
+			break;
+		}
+
+		return id;
 	}
 
 	private Integer pegaIdTipoCurso(String tipoCurso) {
