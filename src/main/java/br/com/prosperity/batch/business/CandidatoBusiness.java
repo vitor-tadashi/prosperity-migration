@@ -13,6 +13,7 @@ public class CandidatoBusiness {
 	private CandidatoDAO candidatoDAO;
 	private final String textFile = "target/generated-sources/UltimoLeadId.txt";
 	
+	// Isso é uma forma manual de fazer AutoWired:
 	public void setCandidatoDAO(CandidatoDAO candidatoDAO) {
 		this.candidatoDAO = candidatoDAO;
 	}
@@ -21,25 +22,25 @@ public class CandidatoBusiness {
 		return candidatoDAO.listar();
 	}
 
-	public void gravarLeadIdUltimoProcessamento() {
+	public void gravarLeadIdUltimoProcessamento(Long lead_id) {
 		try {
 			PrintWriter out = null;
 			String lead;
 			FileWriter fwOb = null;
 			PrintWriter pwOb = null;
 			
-			lead = candidatoDAO.obterLeadIdUltimoProcessamento();
+			lead = candidatoDAO.obterLeadIdUltimoProcessamento(lead_id);
 			
 			out = new PrintWriter(new BufferedWriter(new FileWriter(textFile, true)));
 			fwOb = new FileWriter(textFile, false);
 			pwOb = new PrintWriter(fwOb, false);
 			
-			// Aqui eu apago o textFile sempre antes de gravar a nova data nele:
+			// Aqui eu apago o textFile sempre antes de gravar o novo lead_id nele:
 			pwOb.flush();
 			pwOb.close();
 			fwOb.close();
 
-			// Finalmente armazeno a data nele:
+			// Finalmente armazeno o lead_id nele:
 			out.print(lead);
 			out.close();
 		} catch (IOException e) {

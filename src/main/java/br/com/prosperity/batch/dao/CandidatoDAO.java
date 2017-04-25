@@ -17,6 +17,7 @@ import br.com.prosperity.batch.bean.CandidatoWordPressBean;
 public class CandidatoDAO {
 
 	private DataSource dataSource;
+	List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -51,32 +52,17 @@ public class CandidatoDAO {
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	public String obterLeadIdUltimoProcessamento() {
+	public String obterLeadIdUltimoProcessamento(Long lead_id) {
 		String lead = "1";
-		this.stmt = null;
-		this.rs = null;
-
-		try {
-			conexao = dataSource.getConnection();
-			stmt = conexao.createStatement();
-			// Comando do mySQL para pegar a última data da tabela wp_rg_lead
-			stmt.execute("select max(lead_id) from wp_rg_lead_detail");
-			rs = stmt.getResultSet();
-
-			while (this.rs.next()) {
-				lead = rs.getString(1);
-			}
-
-		} catch (Exception e) {
-			System.out.println("Erro: " + e);
-		}
-
+		
+		lead = lead_id.toString();
+		System.out.println(lead);
+		
 		return lead;
 	}
 
 	// Listar:
 	public List<CandidatoWordPressBean> listar() {
-		List<CandidatoWordPressBean> listaCandidatos = new ArrayList<>();
 		
 		this.stmt = null;
 		this.rs = null;
@@ -84,6 +70,15 @@ public class CandidatoDAO {
 		// Para executar o batch a partir do mais recente cadastro:
 		String leadIdMaisRecente = this.pegarLeadIUltimoCadastroDoArquivo();
 		String buscarCadastrosMaisRecentes = this.sqlQuery + leadIdMaisRecente + " group by lead_id";
+		
+		Integer lead_idMais200 = Integer.parseInt(leadIdMaisRecente);
+		
+		lead_idMais200 += 200;
+		
+		String leadIdMaisRecenteMais200 = lead_idMais200.toString();
+		
+		buscarCadastrosMaisRecentes += " and lead_id < " + leadIdMaisRecenteMais200;
+		
 
 		try {
 			conexao = dataSource.getConnection();

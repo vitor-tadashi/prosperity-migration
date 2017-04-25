@@ -32,7 +32,7 @@ public class CustomItemReader implements ItemReader<WordpressBean> {
 
 		wordpressBean.setCandidatosWordPress(listaCandidatos);
 
-		candidatoBusiness.gravarLeadIdUltimoProcessamento();
+		candidatoBusiness.gravarLeadIdUltimoProcessamento(listaCandidatos.get(listaCandidatos.size()-1).getLead_id());
 
 		return wordpressBean;
 	}
