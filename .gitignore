@@ -1,1 +1,10 @@
 /target/
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
