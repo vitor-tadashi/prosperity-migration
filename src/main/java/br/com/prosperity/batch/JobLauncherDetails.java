@@ -29,7 +29,6 @@ public class JobLauncherDetails extends QuartzJobBean {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void executeInternal(JobExecutionContext context) {
 
 		Map<String, Object> jobDataMap = context.getMergedJobDataMap();

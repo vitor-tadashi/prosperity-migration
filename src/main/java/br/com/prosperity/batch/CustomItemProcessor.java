@@ -1,5 +1,6 @@
 package br.com.prosperity.batch;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +52,8 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		SituacaoAtualBean situacaoAtual = new SituacaoAtualBean();
 		StatusCandidatoBean statusCandidato = new StatusCandidatoBean();
 		UsuarioBean usuario = new UsuarioBean();
+
+		BigDecimal pretensao;
 
 		// CANAL INFORMACAO BEAN:
 		if (w.getComoFicouSabendo() != null)
@@ -152,7 +155,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			tipoCurso.setId(16);
 
 		// VAGA BEAN CRIADA ESPECIALMENTE PARA OS CANDIDATOS DO WORDPRESS:
-		vaga.setId(1202);
+		vaga.setId(3286);
 
 		// CANDIDATO BEAN
 		if (w.getCPF().length() <= 15 && w.getCPF().length() > 0)
@@ -196,10 +199,16 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		else
 			candidato.setNome("Nome inválido");
 
-		if (w.getPretensao() != null && !w.getPretensao().isEmpty())
-			candidato.setValorPretensao(1000.0);
-		else
-			candidato.setValorPretensao(1000.0);
+		if (w.getPretensao() != null && !w.getPretensao().isEmpty()) {
+			
+			try {
+			pretensao = new BigDecimal(w.getPretensao());
+			candidato.setValorPretensao(pretensao);
+			} catch (Exception e) {
+				candidato.setValorPretensao(BigDecimal.TEN);
+			}
+		} else
+			candidato.setValorPretensao(BigDecimal.ZERO);
 
 		if (w.getRG() != null)
 			candidato.setRg(w.getRG());

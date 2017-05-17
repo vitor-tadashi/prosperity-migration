@@ -6,7 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
 	public static void main(String[] args) {
 
-		String springConfig = "spring/batch/jobs/job-hello-world.xml";
+		String springConfig = "spring/batch/jobs/prosperity-batch.xml";
 
 		ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);	
 		

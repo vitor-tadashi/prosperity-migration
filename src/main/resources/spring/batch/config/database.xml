@@ -10,7 +10,7 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<!-- url_do_banco/database_name -->
-		<property name="url" value="jdbc:mysql://br-cdbr-azure-south-b.cloudapp.net:3306/acsm_35d781802749dbc" />
+		<property name="url" value="jdbc:mysql://br-cdbr-azure-south-b.cloudapp.net:3306/acsm_35d781802749dbc?characterEncoding=UTF-8" />
 		<property name="username" value="bc180b1c070771" />
 		<property name="password" value="f407e160" />
 	</bean>

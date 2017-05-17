@@ -1,7 +1,11 @@
 package br.com.prosperity.batch.dao;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,12 +27,12 @@ public class CandidatoDAO {
 		this.dataSource = dataSource;
 	}
 
-	private final String sqlQuery = "SELECT lead_id, " 
-			+ "MAX(IF(field_number = '1', value, NULL)) AS 'nome', "
-			+ "MAX(IF(field_number = '3', value, NULL)) AS 'email', " 
+	String leadIdMaisRecente;
+
+	private final String sqlQuery = "SELECT lead_id, " + "MAX(IF(field_number = '1', value, NULL)) AS 'nome', "
+			+ "MAX(IF(field_number = '3', value, NULL)) AS 'email', "
 			+ "MAX(IF(field_number = '8', value, NULL)) AS 'data nascimento', "
 			+ "MAX(IF(field_number = '13', value, NULL)) AS 'curriculo', "
-			+ "MAX(IF(field_number = '15', value, NULL)) AS 'vaga', "
 			+ "MAX(IF(field_number = '10', value, NULL)) AS 'telefone', "
 			+ "MAX(IF(field_number = '11', value, NULL)) AS 'cidade', "
 			+ "MAX(IF(field_number = '31', value, NULL)) AS 'grau instrucao', "
@@ -52,36 +56,19 @@ public class CandidatoDAO {
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	public String obterLeadIdUltimoProcessamento(Long lead_id) {
-		String lead = "1";
-		
-		lead = lead_id.toString();
-		System.out.println(lead);
-		
-		return lead;
-	}
-
 	// Listar:
 	public List<CandidatoWordPressBean> listar() {
-		
+
 		this.stmt = null;
 		this.rs = null;
 
-		// Para executar o batch a partir do mais recente cadastro:
-		String leadIdMaisRecente = this.pegarLeadIUltimoCadastroDoArquivo();
-		String buscarCadastrosMaisRecentes = this.sqlQuery + leadIdMaisRecente + " group by lead_id";
-		
-		Integer lead_idMais200 = Integer.parseInt(leadIdMaisRecente);
-		
-		lead_idMais200 += 200;
-		
-		String leadIdMaisRecenteMais200 = lead_idMais200.toString();
-		
-		buscarCadastrosMaisRecentes += " and lead_id < " + leadIdMaisRecenteMais200;
-		
+		// Para executar o batch a partir do mais recente processamento:
+		leadIdMaisRecente = this.pegarLeadIUltimoCadastroDoArquivo();
+		String buscarCadastrosMaisRecentes = this.sqlQuery + leadIdMaisRecente + " group by lead_id LIMIT 20;";
 
 		try {
 			conexao = dataSource.getConnection();
+
 			this.stmt = conexao.createStatement();
 			this.stmt.execute(buscarCadastrosMaisRecentes);
 			this.rs = this.stmt.getResultSet();
@@ -93,7 +80,7 @@ public class CandidatoDAO {
 				candidato.setNome(this.rs.getString("nome"));
 				candidato.setEmail(this.rs.getString("email"));
 				candidato.setDataNascimento(this.rs.getString("data nascimento"));
-				candidato.setVaga(this.rs.getString("vaga"));
+				candidato.setEstado(this.rs.getString("estado"));
 				candidato.setTelefone(this.rs.getString("telefone"));
 				candidato.setGrauInstrucao(this.rs.getString("grau instrucao"));
 				candidato.setCurso(this.rs.getString("curso"));
@@ -115,9 +102,9 @@ public class CandidatoDAO {
 				listaCandidatos.add(candidato);
 			}
 
-		} catch (Exception ex) {
+		} catch (Exception e) {
 			// handle any errors
-			System.out.println("Exception: " + ex);
+			e.printStackTrace();
 		} finally {
 			if (this.rs != null) {
 				try {
@@ -136,7 +123,24 @@ public class CandidatoDAO {
 
 				this.stmt = null;
 			}
+
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException sqlEx) {
+				} // ignore
+
+				conexao = null;
+			}
 		}
+
+		Long lead;
+
+		if (listaCandidatos.size() != 0) {
+			lead = listaCandidatos.get(listaCandidatos.size() - 1).getLead_id();
+			gravarLeadIdUltimoProcessamento(lead);
+		}
+
 		return listaCandidatos;
 	}
 
@@ -164,6 +168,35 @@ public class CandidatoDAO {
 			} else {
 				System.out.println("Failed to create directory!");
 			}
+		}
+	}
+
+	public void gravarLeadIdUltimoProcessamento(Long lead_id) {
+		try {
+			PrintWriter out = null;
+			String lead;
+			FileWriter fwOb = null;
+			PrintWriter pwOb = null;
+
+			lead = lead_id.toString();
+
+			out = new PrintWriter(new BufferedWriter(new FileWriter(textFile, true)));
+			fwOb = new FileWriter(textFile, false);
+			pwOb = new PrintWriter(fwOb, false);
+
+			// Aqui eu apago o textFile sempre antes de gravar o novo lead_id
+			// nele:
+			pwOb.flush();
+			pwOb.close();
+			fwOb.close();
+
+			// Finalmente armazeno o lead_id nele:
+			out.print(lead);
+			out.close();
+		} catch (IOException e) {
+			System.out.println(
+					"Ocorreu o seguinte erro quando o programa tentou escrever no seguinte arquivo:\n" + textFile);
+			System.out.println(e);
 		}
 	}
 }
