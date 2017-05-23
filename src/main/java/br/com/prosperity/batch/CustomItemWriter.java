@@ -1,15 +1,18 @@
 package br.com.prosperity.batch;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.batch.item.ItemWriter;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.google.gson.Gson;
 
 import br.com.prosperity.batch.bean.WordpressBean;
 
@@ -19,30 +22,60 @@ public class CustomItemWriter implements ItemWriter<WordpressBean> {
 
 	@Override
 	public void write(List<? extends WordpressBean> listaWordpress) throws Exception {
-		generateXML(listaWordpress.get(0));
+
+		if (listaWordpress == null)
+			return;
+
+		if (listaWordpress.size() == 0)
+			return;
+
+		postJson(listaWordpress.get(0));
 	}
 
-	@Path(value = URL_SERVICO_PROSPERITY)
-	@POST
-	@Produces("application/xml")
-	public String generateXML(WordpressBean w) throws Exception {
-		XStream stream = new XStream(new DomDriver());
-
-		String xml = stream.toXML(w);
-
-		String xmlConsertada = removerCaracteres(xml);
+	public void postJson(WordpressBean w) throws Exception {
+		Gson gson = new Gson();
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		
-		//System.out.println(xmlConsertada);
-
-		return xmlConsertada;
+		HttpPost post = new HttpPost(URL_SERVICO_PROSPERITY);
+		StringEntity postingString = new StringEntity(gson.toJson(w), "UTF-8");
+		post.setEntity(postingString);
+		
+		/* Apenas para exibir: */
+		InputStream is = postingString.getContent();
+		String result = getStringFromInputStream(is);
+		System.out.println(result);
+		/* Fim exibir */
+		
+		post.setHeader("Content-type", "application/json;charset=UTF-8");
+		httpClient.execute(post);
 	}
 
-	public String removerCaracteres(String xml) {
+	// convert InputStream to String
+	private String getStringFromInputStream(InputStream is) {
 
-		String xmlConsertada = xml;
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
 
-		xmlConsertada = xml.replaceAll("&#xd;", " ");
+		String line;
+		try {
 
-		return xmlConsertada;
+			br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
 	}
 }

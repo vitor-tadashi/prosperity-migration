@@ -84,7 +84,6 @@
 			<version>${spring.batch.version}</version>
 		</dependency>
 
-
 		<!-- Spring Batch unit test -->
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
@@ -108,8 +107,21 @@
 			<artifactId>prosperity-web</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>contenttype</artifactId>
+			<version>3.4.200-v20130326-1255</version>
+		</dependency>
+
 	</dependencies>
-	
+
 	<build>
 		<finalName>spring-batch</finalName>
 		<plugins>

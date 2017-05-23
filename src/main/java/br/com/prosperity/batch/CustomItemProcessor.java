@@ -122,9 +122,9 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			if (!w.getDataFormacao().equals(null))
 				formacao.setDataConclusao(this.transformaStringData(w.getDataFormacao()));
 			else
-				formacao.setDataConclusao(this.transformaStringData("12/1912"));
+				formacao.setDataConclusao(this.transformaStringData("12/1980"));
 		} else
-			formacao.setDataConclusao(this.transformaStringData("12/1912"));
+			formacao.setDataConclusao(this.transformaStringData("12/1980"));
 
 		if (w.getCurso() != null) {
 			if (w.getCurso().length() <= 100 && !w.getCurso().equals(null))
@@ -155,7 +155,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			tipoCurso.setId(16);
 
 		// VAGA BEAN CRIADA ESPECIALMENTE PARA OS CANDIDATOS DO WORDPRESS:
-		vaga.setId(3286);
+		vaga.setId(4446);
 
 		// CANDIDATO BEAN
 		if (w.getCPF().length() <= 15 && w.getCPF().length() > 0)
@@ -209,7 +209,15 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			}
 		} else
 			candidato.setValorPretensao(BigDecimal.ZERO);
+		
+		if(candidato.getValorPretensao().compareTo(BigDecimal.valueOf( 214700 ))>=0){
+			candidato.setValorPretensao(BigDecimal.valueOf(214000));
+		}
 
+			/* price.compareTo( BigDecimal.valueOf( 500 ) > 0 
+				     && price.compareTo( BigDecimal.valueOf( 1000 ) < 0 )
+			*/
+			
 		if (w.getRG() != null)
 			candidato.setRg(w.getRG());
 		else
@@ -219,7 +227,7 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 			candidato.setCurriculoTexto(w.getCurriculo());
 
 		// BEANS QUE VÃO DENTRO DE CANDIDATO BEAN:
-		usuario.setId(1040);
+		usuario.setId(1043);
 
 		statusCandidato.setUsuario(usuario);
 
@@ -358,40 +366,40 @@ public class CustomItemProcessor implements ItemProcessor<WordpressBean, Wordpre
 		dataNaoTratada = dataNaoTratada.toLowerCase();
 
 		if (dataNaoTratada.contains("dez") || dataNaoTratada.contains("dezembro")
-				|| dataNaoTratada.substring(0, 2).equals("12"))
+				|| dataNaoTratada.startsWith("12"))
 			dataTratada += "/12";
 		else if (dataNaoTratada.contains("nov") || dataNaoTratada.contains("novembro")
-				|| dataNaoTratada.substring(0, 2).equals("11"))
+				|| dataNaoTratada.startsWith("11"))
 			dataTratada += "/11";
 		else if (dataNaoTratada.contains("out") || dataNaoTratada.contains("outubro")
-				|| dataNaoTratada.substring(0, 2).equals("10"))
+				|| dataNaoTratada.startsWith("10"))
 			dataTratada += "/10";
 		else if (dataNaoTratada.contains("set") || dataNaoTratada.contains("setembro")
-				|| dataNaoTratada.substring(0, 2).equals("09") || dataNaoTratada.substring(0, 1).equals("9"))
+				|| dataNaoTratada.startsWith("09") || dataNaoTratada.startsWith("9"))
 			dataTratada += "/09";
 		else if (dataNaoTratada.contains("ago") || dataNaoTratada.contains("agosto")
-				|| dataNaoTratada.substring(0, 2).equals("08") || dataNaoTratada.substring(0, 1).equals("8"))
+				|| dataNaoTratada.startsWith("08") || dataNaoTratada.startsWith("8"))
 			dataTratada += "/08";
 		else if (dataNaoTratada.contains("jul") || dataNaoTratada.contains("julho")
-				|| dataNaoTratada.substring(0, 2).equals("07") || dataNaoTratada.substring(0, 1).equals("7"))
+				|| dataNaoTratada.startsWith("07") || dataNaoTratada.startsWith("7"))
 			dataTratada += "/07";
 		else if (dataNaoTratada.contains("jun") || dataNaoTratada.contains("junho")
-				|| dataNaoTratada.substring(0, 2).equals("06") || dataNaoTratada.substring(0, 1).equals("6"))
+				|| dataNaoTratada.startsWith("06") || dataNaoTratada.startsWith("6"))
 			dataTratada += "/06";
 		else if (dataNaoTratada.contains("mai") || dataNaoTratada.contains("maio")
-				|| dataNaoTratada.substring(0, 2).equals("05") || dataNaoTratada.substring(0, 1).equals("5"))
+				|| dataNaoTratada.startsWith("05") || dataNaoTratada.startsWith("5"))
 			dataTratada += "/05";
 		else if (dataNaoTratada.contains("abr") || dataNaoTratada.contains("abril")
-				|| dataNaoTratada.substring(0, 2).equals("04") || dataNaoTratada.substring(0, 1).equals("4"))
+				|| dataNaoTratada.startsWith("04") || dataNaoTratada.startsWith("4"))
 			dataTratada += "/04";
 		else if (dataNaoTratada.contains("mar") || dataNaoTratada.contains("março") || dataNaoTratada.contains("marco")
-				|| dataNaoTratada.substring(0, 2).equals("03") || dataNaoTratada.substring(0, 1).equals("3"))
+				|| dataNaoTratada.startsWith("03") || dataNaoTratada.startsWith("3"))
 			dataTratada += "/03";
 		else if (dataNaoTratada.contains("fev") || dataNaoTratada.contains("fevereiro")
-				|| dataNaoTratada.substring(0, 2).equals("02") || dataNaoTratada.substring(0, 1).equals("2"))
+				|| dataNaoTratada.startsWith("02") || dataNaoTratada.startsWith("2"))
 			dataTratada += "/02";
 		else if (dataNaoTratada.contains("jan") || dataNaoTratada.contains("janeiro")
-				|| dataNaoTratada.substring(0, 2).equals("01") || dataNaoTratada.substring(0, 1).equals("1"))
+				|| dataNaoTratada.startsWith("01") || dataNaoTratada.startsWith("1"))
 			dataTratada += "/01";
 		else
 			dataTratada = null;

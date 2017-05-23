@@ -7,12 +7,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.prosperity.bean.CandidatoBean;
 
 @XmlRootElement(name = "WordpressBean")
 public class WordpressBean {
-	private List<CandidatoWordPressBean> candidatosWordPress = new ArrayList<>();
+	
 	private List<CandidatoBean> candidatos;
+	
+	@JsonIgnore
+	private List<CandidatoWordPressBean> candidatosWordPress = new ArrayList<>();
 
 	public WordpressBean(List<CandidatoBean> candidatos) {
 		super();
